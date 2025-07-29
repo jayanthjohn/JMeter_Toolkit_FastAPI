@@ -1,0 +1,81 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMeter Toolkit</title>
+  <!-- Tailwind CDN for quick styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* custom brand colours */
+    :root {
+      --brand-blue: #00184d; /* deep blue like screenshot */
+      --brand-cyan: #00c8ff;
+    }
+    .brand-gradient {
+      background: radial-gradient(ellipse at top right, rgba(0,200,255,0.4), transparent 70%), var(--brand-blue);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ─── Header / Nav Bar ─────────────────────────────────────────────── -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <!-- logo -->
+      <div class="flex items-center gap-2">
+        <img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
+        <span class="font-semibold text-xl text-gray-800">JMeter&nbsp;Toolkit</span>
+      </div>
+      <!-- nav links -->
+      <nav class="hidden md:flex space-x-8">
+        <a href="/home" class="text-gray-700 hover:text-brand-cyan">Home</a>
+        <a href="/csv-to-jmx" class="text-gray-700 hover:text-brand-cyan">CSV → JMX</a>
+        <a href="/har-to-jmx" class="text-gray-700 hover:text-brand-cyan">HAR → JMX</a>
+        <a href="/postman-to-jmx" class="text-gray-700 hover:text-brand-cyan">Postman → JMX</a>
+        <a href="/chat" class="text-gray-700 hover:text-brand-cyan">LLM Chat</a>
+      </nav>
+      <!-- search box (placeholder) -->
+      <form class="hidden md:block relative">
+        <input type="text" placeholder="Search" class="border rounded-full pl-4 pr-8 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan" />
+        <svg class="w-4 h-4 absolute right-2 top-1.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" /></svg>
+      </form>
+    </div>
+  </header>
+
+  <!-- ─── Hero Section ─────────────────────────────────────────────────── -->
+  <section class="brand-gradient text-white flex-1">
+    <div class="max-w-7xl mx-auto px-4 py-20 flex flex-col md:flex-row items-center gap-12">
+      <!-- headline -->
+      <div class="md:w-1/2">
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">Harness scalable agentic AI networks for unmatched efficiency</h1>
+        <p class="mt-6 text-lg text-blue-100">From script conversion to offline LLM assistance, streamline your performance‑testing workflow in one place.</p>
+        <a href="/csv-to-jmx" class="mt-8 inline-block bg-brand-cyan text-brand-blue font-semibold py-3 px-6 rounded-full shadow hover:opacity-90">Get started</a>
+      </div>
+      <!-- decorative image -->
+      <div class="md:w-1/2">
+        <img src="/static/img/hero-analytics.svg" alt="analytics" class="w-full h-auto" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Dynamic page content (child templates) ───────────────────────── -->
+  <main class="max-w-6xl mx-auto w-full px-4 py-10 flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ─── Footer ───────────────────────────────────────────────────────── -->
+  <footer class="bg-white border-t">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-gray-600 flex flex-col sm:flex-row justify-between gap-4">
+      <div>© {{ 2025 }} JMeter Toolkit</div>
+      <div class="space-x-4">
+        <a href="#" class="hover:text-brand-cyan">Privacy</a>
+        <a href="#" class="hover:text-brand-cyan">Terms</a>
+        <a href="#" class="hover:text-brand-cyan">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

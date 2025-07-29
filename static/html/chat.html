@@ -1,0 +1,9 @@
+
+<h4>Offline LLM Chat</h4>
+<form hx-post="/chat" hx-target="#chat-output" hx-swap="beforeend">
+    <div class="input-group mb-3">
+        <input type="text" name="user_prompt" class="form-control" placeholder="Ask about JMeter scripting..." required>
+        <button class="btn btn-primary">Send</button>
+    </div>
+</form>
+<div id="chat-output" class="border p-3 bg-white"></div>

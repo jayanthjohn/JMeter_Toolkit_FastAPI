@@ -1,0 +1,17 @@
+
+<h4>CSV to JMX Script Generator</h4>
+<form hx-post="/script-gen" hx-encoding="multipart/form-data" hx-target="#script-output">
+    <div class="mb-2">
+        <label>Upload CSV</label>
+        <input type="file" name="file" class="form-control" required>
+    </div>
+    <div class="mb-2">
+        <label>Mode</label>
+        <select name="mode" class="form-control">
+            <option value="jmeter">JMeter</option>
+            <option value="k6">k6</option>
+        </select>
+    </div>
+    <button class="btn btn-success">Generate</button>
+</form>
+<div id="script-output" class="mt-3"></div>

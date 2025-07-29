@@ -1,0 +1,2 @@
+Write a regex to extract '{{ expected }}' from the string:
+{{ input_string }}

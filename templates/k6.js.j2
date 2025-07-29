@@ -1,0 +1,25 @@
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export let options = {
+  vus: {{ users }},
+  duration: '{{ duration }}',
+};
+
+export default function () {
+  let headers = {
+    {% for key, value in headers.items() %}
+    "{{ key }}": "{{ value }}",
+    {% endfor %}
+  };
+
+  let payload = {% if body %}`{{ body | tojson }}`{% else %}null{% endif %};
+
+  let res = http.request('{{ method }}', '{{ url }}', payload, { headers: headers });
+
+  check(res, {
+    "status is 200": (r) => r.status === 200,
+  });
+
+  sleep(1);
+}

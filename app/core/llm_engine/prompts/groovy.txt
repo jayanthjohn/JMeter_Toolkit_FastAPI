@@ -1,0 +1,2 @@
+Write Groovy code for JSR223 Sampler in JMeter to extract the field '{{ key }}' from the following JSON response:
+{{ json_response }}

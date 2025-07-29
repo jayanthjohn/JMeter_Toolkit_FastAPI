@@ -1,0 +1,32 @@
+<!-- templates/csv_to_jmx.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV to JMX Generator</title>
+</head>
+<body>
+    <h1>CSV to JMX / K6 Script Generator</h1>
+
+    <form action="/generate-scripts" method="post" enctype="multipart/form-data">
+        <label for="file">Upload CSV File:</label>
+        <input type="file" id="file" name="file" accept=".csv" required><br><br>
+
+        <label for="output_types">Select Output Type(s):</label><br>
+        <input type="checkbox" name="output_types" value="JMeter (.jmx)" checked> JMeter (.jmx)<br>
+        <input type="checkbox" name="output_types" value="K6 (.js)"> K6 (.js)<br><br>
+
+        <button type="submit">Generate Scripts</button>
+    </form>
+
+    {% if output_paths %}
+        <h2>Generated Files:</h2>
+        <ul>
+        {% for path in output_paths %}
+            <li><a href="{{ url_for('static', path='outputs/' ~ path.split('/')[-1]) }}" download>{{ path.split('/')[-1] }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <br><a href="/home">Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,14 @@
+
+<h4>Regex Tester</h4>
+<form hx-post="/regex" hx-target="#regex-output">
+    <div class="mb-2">
+        <label>Regex Pattern</label>
+        <input type="text" name="pattern" class="form-control" required>
+    </div>
+    <div class="mb-2">
+        <label>Test String</label>
+        <textarea name="test_str" rows="3" class="form-control" required></textarea>
+    </div>
+    <button class="btn btn-primary">Test</button>
+</form>
+<div id="regex-output" class="mt-3"></div>

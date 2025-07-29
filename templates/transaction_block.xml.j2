@@ -1,0 +1,9 @@
+<TransactionController guiclass="TransactionControllerGui"
+                       testclass="TransactionController"
+                       testname="{{ name }}"
+                       enabled="true">
+  <boolProp name="TransactionController.includeTimers">true</boolProp>
+</TransactionController>
+<hashTree>
+  {{ samplers_xml | safe }}
+</hashTree>
