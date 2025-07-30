@@ -1,32 +1,362 @@
-<!-- templates/csv_to_jmx.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CSV to JMX Generator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CSV to JMX Generator - JMeter Toolkit</title>
+  <!-- Tailwind CDN for quick styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Cognizant-inspired color palette */
+    :root {
+      --cognizant-navy: #1a1f3a;
+      --cognizant-blue: #2d4a87;
+      --cognizant-light-blue: #4a90e2;
+      --cognizant-cyan: #00bcd4;
+      --cognizant-purple: #6366f1;
+      --cognizant-gradient-start: #1a1f3a;
+      --cognizant-gradient-end: #2d4a87;
+    }
+
+    .cognizant-gradient {
+      background: linear-gradient(135deg, var(--cognizant-navy) 0%, var(--cognizant-blue) 50%, #4a5568 100%);
+    }
+
+    .feature-gradient-1 {
+      background: linear-gradient(135deg, #4a90e2 0%, #00bcd4 100%);
+    }
+
+    .upload-zone {
+      transition: all 0.3s ease;
+      border: 2px dashed #e5e7eb;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--cognizant-cyan);
+      background-color: rgba(0, 188, 212, 0.05);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--cognizant-cyan);
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: scale(1.02);
+    }
+
+    .floating-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+      from { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
+      to { box-shadow: 0 0 30px rgba(74, 144, 226, 0.8); }
+    }
+
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .checkbox-custom {
+      appearance: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.375rem;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .checkbox-custom:checked {
+      background-color: var(--cognizant-cyan);
+      border-color: var(--cognizant-cyan);
+    }
+
+    .checkbox-custom:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 0.875rem;
+    }
+
+    .geometric-bg {
+      background-image:
+        linear-gradient(45deg, rgba(74, 144, 226, 0.1) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(74, 144, 226, 0.1) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(74, 144, 226, 0.1) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(74, 144, 226, 0.1) 75%);
+      background-size: 60px 60px;
+      background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+    }
+  </style>
 </head>
-<body>
-    <h1>CSV to JMX / K6 Script Generator</h1>
+<body class="min-h-screen flex flex-col bg-gray-50">
 
-    <form action="/generate-scripts" method="post" enctype="multipart/form-data">
-        <label for="file">Upload CSV File:</label>
-        <input type="file" id="file" name="file" accept=".csv" required><br><br>
+  <!-- ─── Header / Nav Bar ─────────────────────────────────────────────── -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <!-- logo -->
+      <div class="flex items-center gap-2">
+        <img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
+        <span class="font-semibold text-xl text-gray-800">JMeter&nbsp;Toolkit</span>
+      </div>
+      <!-- nav links -->
+      <nav class="hidden md:flex space-x-8">
+        <a href="/home" class="text-gray-700 hover:text-blue-600 transition-colors">Home</a>
+        <a href="/csv-to-jmx" class="text-blue-600 font-semibold">CSV → JMX</a>
+        <a href="/har-to-jmx" class="text-gray-700 hover:text-blue-600 transition-colors">HAR → JMX</a>
+        <a href="/postman-to-jmx" class="text-gray-700 hover:text-blue-600 transition-colors">Postman → JMX</a>
+        <a href="/chat" class="text-gray-700 hover:text-blue-600 transition-colors">LLM Chat</a>
+      </nav>
+      <!-- search box -->
+      <form class="hidden md:block relative">
+        <input type="text" placeholder="Search" class="border rounded-full pl-4 pr-8 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+        <svg class="w-4 h-4 absolute right-2 top-1.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" /></svg>
+      </form>
+    </div>
+  </header>
 
-        <label for="output_types">Select Output Type(s):</label><br>
-        <input type="checkbox" name="output_types" value="JMeter (.jmx)" checked> JMeter (.jmx)<br>
-        <input type="checkbox" name="output_types" value="K6 (.js)"> K6 (.js)<br><br>
+  <!-- ─── Page Header Section ─────────────────────────────────────────────────── -->
+<section class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white py-16 relative overflow-hidden">
+  <!-- Floating background elements -->
+  <div class="absolute top-10 right-10 w-32 h-32 bg-white rounded-full opacity-10 floating-animation"></div>
+  <div class="absolute bottom-10 left-10 w-24 h-24 bg-white rounded-full opacity-10 floating-animation" style="animation-delay: -2s;"></div>
 
-        <button type="submit">Generate Scripts</button>
-    </form>
+  <!-- Geometric overlay elements with blue gradient fill -->
+  <div class="absolute top-20 left-20 w-16 h-16 rounded-lg transform rotate-12 bg-gradient-to-br from-blue-400 to-blue-700 opacity-50"></div>
+  <div class="absolute bottom-20 right-20 w-12 h-12 rounded-full bg-gradient-to-br from-cyan-300 to-blue-500 opacity-50"></div>
 
-    {% if output_paths %}
-        <h2>Generated Files:</h2>
-        <ul>
-        {% for path in output_paths %}
-            <li><a href="{{ url_for('static', path='outputs/' ~ path.split('/')[-1]) }}" download>{{ path.split('/')[-1] }}</a></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+  <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+    <div class="inline-block bg-white bg-opacity-20 backdrop-blur text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
+      📊 Enterprise CSV Converter
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">CSV to JMX / K6 Script Generator</h1>
+    <p class="text-lg text-blue-100 max-w-2xl mx-auto">
+      Transform your CSV data into enterprise-grade JMeter test plans or K6 scripts with our intelligent conversion platform. Upload, configure, and deploy in seconds.
+    </p>
+  </div>
+</section>
 
-    <br><a href="/home">Back to Home</a>
+  <!-- ─── Main Content ─────────────────────────────────────────────────── -->
+  <main class="flex-1 py-12">
+    <div class="max-w-4xl mx-auto px-4">
+
+      <!-- Upload Form Card -->
+      <div class="bg-white rounded-3xl shadow-xl p-8 mb-8 card-hover">
+        <form action="/generate-scripts" method="post" enctype="multipart/form-data" class="space-y-8">
+
+          <!-- File Upload Section -->
+          <div>
+            <label class="block text-lg font-semibold text-gray-800 mb-4">
+              <svg class="w-6 h-6 inline-block mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              Upload CSV File
+            </label>
+            <div class="upload-zone rounded-2xl p-8 text-center cursor-pointer relative">
+              <input type="file" id="file" name="file" accept=".csv" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+              <div class="upload-content">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                </div>
+                <p class="text-lg font-semibold text-gray-700 mb-2">Drop your CSV file here</p>
+                <p class="text-gray-500">or click to browse</p>
+                <p class="text-sm text-gray-400 mt-2">Supports .csv files up to 10MB</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Output Options Section -->
+          <div>
+            <label class="block text-lg font-semibold text-gray-800 mb-6">
+              <svg class="w-6 h-6 inline-block mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Select Output Type(s)
+            </label>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- JMeter Option -->
+              <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-transparent hover:border-blue-200 transition-all">
+                <label class="flex items-start space-x-4 cursor-pointer">
+                  <input type="checkbox" name="output_types" value="JMeter (.jmx)" checked class="checkbox-custom mt-1">
+                  <div class="flex-1">
+                    <div class="flex items-center mb-2">
+                      <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                      </div>
+                      <span class="font-semibold text-gray-800">JMeter (.jmx)</span>
+                    </div>
+                    <p class="text-sm text-gray-600">Generate Apache JMeter test plan files for enterprise load testing</p>
+                  </div>
+                </label>
+              </div>
+
+              <!-- K6 Option -->
+              <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border-2 border-transparent hover:border-indigo-200 transition-all">
+                <label class="flex items-start space-x-4 cursor-pointer">
+                  <input type="checkbox" name="output_types" value="K6 (.js)" class="checkbox-custom mt-1">
+                  <div class="flex-1">
+                    <div class="flex items-center mb-2">
+                      <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                      </div>
+                      <span class="font-semibold text-gray-800">K6 (.js)</span>
+                    </div>
+                    <p class="text-sm text-gray-600">Generate K6 JavaScript scripts for modern performance testing</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold py-4 px-12 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all pulse-glow">
+              <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+              </svg>
+              Generate Scripts
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Generated Files Section -->
+      {% if output_paths %}
+      <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">🎉 Scripts Generated Successfully!</h2>
+          <p class="text-gray-600">Your enterprise-ready files are available for download</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {% for path in output_paths %}
+          <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-300 transition-all">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center mr-4">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-800">{{ path.split('/')[-1] }}</p>
+                  <p class="text-sm text-gray-500">Ready to download</p>
+                </div>
+              </div>
+              <a href="{{ url_for('static', path='outputs/' ~ path.split('/')[-1]) }}" download class="bg-cyan-500 text-white font-semibold py-2 px-4 rounded-full hover:bg-cyan-600 transition-all transform hover:scale-105">
+                Download
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Back to Home Button -->
+      <div class="text-center mt-8">
+        <a href="/home" class="inline-flex items-center text-gray-600 hover:text-blue-600 font-semibold transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ─── Footer ───────────────────────────────────────────────────────── -->
+  <footer class="bg-white border-t">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-gray-600 flex flex-col sm:flex-row justify-between gap-4">
+      <div>© 2025 JMeter Toolkit</div>
+      <div class="space-x-4">
+        <a href="#" class="hover:text-blue-600 transition-colors">Privacy</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Terms</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Enhanced file upload functionality
+    const uploadZone = document.querySelector('.upload-zone');
+    const fileInput = document.querySelector('#file');
+    const uploadContent = document.querySelector('.upload-content');
+
+    // Drag and drop functionality
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        updateUploadDisplay(files[0]);
+      }
+    });
+
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        updateUploadDisplay(e.target.files[0]);
+      }
+    });
+
+    // Update upload display when file is selected
+    function updateUploadDisplay(file) {
+      uploadContent.innerHTML = `
+        <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <p class="text-lg font-semibold text-gray-700 mb-2">✅ ${file.name}</p>
+        <p class="text-gray-500">File ready for processing</p>
+        <p class="text-sm text-gray-400 mt-2">Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+      `;
+    }
+  </script>
+
 </body>
 </html>

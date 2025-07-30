@@ -1,4 +1,3 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +11,88 @@
     :root {
       --brand-blue: #00184d; /* deep blue like screenshot */
       --brand-cyan: #00c8ff;
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --accent-orange: #f97316;
+      --accent-green: #10b981;
     }
+
     .brand-gradient {
       background: radial-gradient(ellipse at top right, rgba(0,200,255,0.4), transparent 70%), var(--brand-blue);
+    }
+
+    .colorful-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .feature-gradient-1 {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    }
+
+    .feature-gradient-2 {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+
+    .feature-gradient-3 {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .feature-gradient-4 {
+      background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+    }
+
+    .stats-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .floating-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-delayed {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: -2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+      from { box-shadow: 0 0 20px rgba(0, 200, 255, 0.4); }
+      to { box-shadow: 0 0 30px rgba(0, 200, 255, 0.8); }
+    }
+
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .icon-bounce {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+      40%, 43% { transform: translate3d(0, -30px, 0); }
+      70% { transform: translate3d(0, -15px, 0); }
+      90% { transform: translate3d(0, -4px, 0); }
     }
   </style>
 </head>
@@ -30,32 +108,205 @@
       </div>
       <!-- nav links -->
       <nav class="hidden md:flex space-x-8">
-        <a href="/home" class="text-gray-700 hover:text-brand-cyan">Home</a>
-        <a href="/csv-to-jmx" class="text-gray-700 hover:text-brand-cyan">CSV → JMX</a>
-        <a href="/har-to-jmx" class="text-gray-700 hover:text-brand-cyan">HAR → JMX</a>
-        <a href="/postman-to-jmx" class="text-gray-700 hover:text-brand-cyan">Postman → JMX</a>
-        <a href="/chat" class="text-gray-700 hover:text-brand-cyan">LLM Chat</a>
+        <a href="/home" class="text-gray-700 hover:text-brand-cyan transition-colors">Home</a>
+        <a href="/csv-to-jmx" class="text-gray-700 hover:text-brand-cyan transition-colors">CSV → JMX</a>
+        <a href="/har-to-jmx" class="text-gray-700 hover:text-brand-cyan transition-colors">HAR → JMX</a>
+        <a href="/postman-to-jmx" class="text-gray-700 hover:text-brand-cyan transition-colors">Postman → JMX</a>
+        <a href="/chat" class="text-gray-700 hover:text-brand-cyan transition-colors">LLM Chat</a>
       </nav>
       <!-- search box (placeholder) -->
       <form class="hidden md:block relative">
-        <input type="text" placeholder="Search" class="border rounded-full pl-4 pr-8 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan" />
+        <input type="text" placeholder="Search" class="border rounded-full pl-4 pr-8 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan transition-all" />
         <svg class="w-4 h-4 absolute right-2 top-1.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" /></svg>
       </form>
     </div>
   </header>
 
   <!-- ─── Hero Section ─────────────────────────────────────────────────── -->
-  <section class="brand-gradient text-white flex-1">
-    <div class="max-w-7xl mx-auto px-4 py-20 flex flex-col md:flex-row items-center gap-12">
+  <section class="brand-gradient text-white flex-1 relative overflow-hidden">
+    <!-- Floating background elements -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 floating-animation"></div>
+    <div class="absolute top-40 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 floating-delayed"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 floating-animation"></div>
+
+    <div class="max-w-7xl mx-auto px-4 py-20 flex flex-col md:flex-row items-center gap-12 relative z-10">
       <!-- headline -->
       <div class="md:w-1/2">
-        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">Harness scalable agentic AI networks for unmatched efficiency</h1>
+        <div class="inline-block bg-cyan-400 text-brand-blue px-4 py-2 rounded-full text-sm font-semibold mb-6 pulse-glow">
+          ⚡ AI-Powered Performance Testing
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">Harness scalable agentic AI networks for <span class="text-gradient">unmatched efficiency</span></h1>
         <p class="mt-6 text-lg text-blue-100">From script conversion to offline LLM assistance, streamline your performance‑testing workflow in one place.</p>
-        <a href="/csv-to-jmx" class="mt-8 inline-block bg-brand-cyan text-brand-blue font-semibold py-3 px-6 rounded-full shadow hover:opacity-90">Get started</a>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <a href="/csv-to-jmx" class="inline-block bg-brand-cyan text-brand-blue font-semibold py-3 px-6 rounded-full shadow hover:opacity-90 transition-all transform hover:scale-105">Get started</a>
+          <a href="#features" class="inline-block border-2 border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-full hover:bg-cyan-400 hover:text-brand-blue transition-all">Learn more</a>
+        </div>
       </div>
-      <!-- decorative image -->
-      <div class="md:w-1/2">
-        <img src="/static/img/hero-analytics.svg" alt="analytics" class="w-full h-auto" />
+      <!-- decorative image placeholder -->
+      <div class="md:w-1/2 relative">
+        <div class="w-full h-96 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-3xl shadow-2xl flex items-center justify-center">
+          <div class="text-center">
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 mx-auto icon-bounce">
+              <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-white">Analytics Dashboard</h3>
+            <p class="text-cyan-100 mt-2">Real-time performance insights</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Stats Section ─────────────────────────────────────────────────── -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="inline-block p-4 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800">10k+</h3>
+          <p class="text-gray-600">Tests Converted</p>
+        </div>
+        <div class="text-center">
+          <div class="inline-block p-4 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800">95%</h3>
+          <p class="text-gray-600">Time Saved</p>
+        </div>
+        <div class="text-center">
+          <div class="inline-block p-4 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800">500+</h3>
+          <p class="text-gray-600">Happy Users</p>
+        </div>
+        <div class="text-center">
+          <div class="inline-block p-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-full mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800">24/7</h3>
+          <p class="text-gray-600">AI Support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Features Section ─────────────────────────────────────────────────── -->
+  <section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-gray-800 mb-4">Powerful <span class="text-gradient">Conversion Tools</span></h2>
+        <p class="text-xl text-gray-600">Transform your testing workflow with our comprehensive suite of tools</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- CSV to JMX -->
+        <div class="feature-gradient-1 rounded-3xl p-8 text-center card-hover">
+          <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <svg class="w-8 h-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">CSV to JMX</h3>
+          <p class="text-gray-600 mb-6">Convert CSV files to JMeter test plans instantly</p>
+          <a href="/csv-to-jmx" class="inline-block bg-white text-pink-500 font-semibold py-2 px-6 rounded-full shadow hover:shadow-lg transition-all transform hover:scale-105">Try Now</a>
+        </div>
+
+        <!-- HAR to JMX -->
+        <div class="feature-gradient-2 rounded-3xl p-8 text-center card-hover">
+          <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <svg class="w-8 h-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">HAR to JMX</h3>
+          <p class="text-gray-600 mb-6">Transform browser recordings to test scripts</p>
+          <a href="/har-to-jmx" class="inline-block bg-white text-teal-500 font-semibold py-2 px-6 rounded-full shadow hover:shadow-lg transition-all transform hover:scale-105">Try Now</a>
+        </div>
+
+        <!-- Postman to JMX -->
+        <div class="feature-gradient-3 rounded-3xl p-8 text-center card-hover">
+          <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Postman to JMX</h3>
+          <p class="text-gray-600 mb-6">Convert Postman collections seamlessly</p>
+          <a href="/postman-to-jmx" class="inline-block bg-white text-orange-500 font-semibold py-2 px-6 rounded-full shadow hover:shadow-lg transition-all transform hover:scale-105">Try Now</a>
+        </div>
+
+        <!-- LLM Chat -->
+        <div class="feature-gradient-4 rounded-3xl p-8 text-center card-hover">
+          <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">LLM Chat</h3>
+          <p class="text-gray-600 mb-6">AI-powered testing assistance and guidance</p>
+          <a href="/chat" class="inline-block bg-white text-purple-500 font-semibold py-2 px-6 rounded-full shadow hover:shadow-lg transition-all transform hover:scale-105">Try Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Workflow Section ─────────────────────────────────────────────────── -->
+  <section class="py-20 colorful-gradient text-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4">Simple 3-Step Process</h2>
+        <p class="text-xl text-purple-100">Get started with JMeter Toolkit in minutes</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl font-bold text-purple-600">1</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Upload Your Files</h3>
+          <p class="text-purple-100 leading-relaxed">Upload your CSV, HAR, or Postman collection files to our secure platform</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl font-bold text-purple-600">2</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">AI Processing</h3>
+          <p class="text-purple-100 leading-relaxed">Our AI analyzes and converts your files to optimized JMeter test plans</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl font-bold text-purple-600">3</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Download & Run</h3>
+          <p class="text-purple-100 leading-relaxed">Download your JMX files and start performance testing immediately</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA Section ─────────────────────────────────────────────────── -->
+  <section class="py-20 bg-gray-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-6">Ready to Transform Your Testing?</h2>
+      <p class="text-xl text-gray-300 mb-8">Join thousands of developers who trust JMeter Toolkit for their performance testing needs</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/csv-to-jmx" class="inline-block bg-brand-cyan text-brand-blue font-semibold py-4 px-8 rounded-full shadow-lg hover:opacity-90 transition-all transform hover:scale-105">Start Converting Now</a>
+        <a href="/chat" class="inline-block border-2 border-brand-cyan text-brand-cyan font-semibold py-4 px-8 rounded-full hover:bg-brand-cyan hover:text-brand-blue transition-all">Try AI Assistant</a>
       </div>
     </div>
   </section>
@@ -70,9 +321,9 @@
     <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-gray-600 flex flex-col sm:flex-row justify-between gap-4">
       <div>© {{ 2025 }} JMeter Toolkit</div>
       <div class="space-x-4">
-        <a href="#" class="hover:text-brand-cyan">Privacy</a>
-        <a href="#" class="hover:text-brand-cyan">Terms</a>
-        <a href="#" class="hover:text-brand-cyan">Contact</a>
+        <a href="#" class="hover:text-brand-cyan transition-colors">Privacy</a>
+        <a href="#" class="hover:text-brand-cyan transition-colors">Terms</a>
+        <a href="#" class="hover:text-brand-cyan transition-colors">Contact</a>
       </div>
     </div>
   </footer>
