@@ -3,3 +3,8 @@ static/outputs/
 models/
 __pycache__/
 *.py[cod]
+# PyCharm
+.idea/
+
+# macOS metadata
+.DS_Store
