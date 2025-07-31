@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JMeter Test Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Test Results Summary</h1>
+    <ul>
+        <li><strong>Total Requests:</strong> {{ metrics.total_requests }}</li>
+        <li><strong>Average Response Time:</strong> {{ metrics.avg_response_time }} ms</li>
+        <li><strong>Error Rate:</strong> {{ metrics.error_rate }}%</li>
+    </ul>
+
+    <canvas id="chart" width="400" height="200"></canvas>
+    <script>
+        const ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Requests', 'Avg Resp Time (ms)', 'Error Rate (%)'],
+                datasets: [{
+                    label: 'Test Metrics',
+                    data: [
+                        {{ metrics.total_requests }},
+                        {{ metrics.avg_response_time }},
+                        {{ metrics.error_rate }}
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

@@ -7,4 +7,5 @@ __pycache__/
 .idea/
 
 # macOS metadata
-.DS_Store
+.DS_Storeresults/
+jmeter.log

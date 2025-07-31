@@ -1,0 +1,27 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JMeter Test Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        async function pollStatus() {
+            const res = await fetch("/status");
+            const data = await res.json();
+            document.getElementById("status").innerText = "Status: " + data.status;
+            document.getElementById("log").innerText = data.log || "(No logs yet...)";
+
+            if (!data.status.startsWith("Completed") && !data.status.startsWith("Failed") && !data.status.startsWith("Error")) {
+                setTimeout(pollStatus, 3000);
+            }
+        }
+
+        window.onload = pollStatus;
+    </script>
+</head>
+<body>
+    <h1>JMeter Test Dashboard</h1>
+    <p id="status">Status: Loading...</p>
+    <pre id="log" style="background:#f2f2f2; padding:10px; border:1px solid #ccc; height:300px; overflow:auto;"></pre>
+</body>
+</html>

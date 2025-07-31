@@ -1,0 +1,50 @@
+from pathlib import Path
+
+execute_html = """<!DOCTYPE html>
+<html>
+<head>
+    <title>Execute JMeter Test</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Run JMeter Test</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="jmx_file" accept=".jmx" required>
+        <button type="submit">Run Test</button>
+    </form>
+    <p id="status">Waiting to start...</p>
+
+    <script>
+        const form = document.getElementById("upload-form");
+        const status = document.getElementById("status");
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            status.innerText = "Uploading and starting test...";
+            await fetch("/run-jmeter", { method: "POST", body: formData });
+            pollStatus();
+        };
+
+        function pollStatus() {
+            const interval = setInterval(async () => {
+                const res = await fetch("/status");
+                const data = await res.json();
+                status.innerText = "Test Status: " + data.status;
+
+                if (data.status.startsWith("Completed")) {
+                    clearInterval(interval);
+                    window.location.href = "/results";
+                } else if (data.status.startsWith("Failed") || data.status.startsWith("Error")) {
+                    clearInterval(interval);
+                    alert("Test failed: " + data.status);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+"""
+
+Path("templates").mkdir(exist_ok=True)
+Path("templates/execute.html").write_text(execute_html)

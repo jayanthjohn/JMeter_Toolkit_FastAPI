@@ -8,6 +8,10 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from .utils.postman_parser import parse_postman_collection
 from .routers import regex, scriptgen, chat
+# Additional imports for JMeter execution
+from fastapi import BackgroundTasks
+from fastapi.responses import JSONResponse
+from .utils.jmeter_runner import run_jmeter, parse_jtl, jmeter_status_tracker
 
 app = FastAPI()
 from fastapi import UploadFile, File, Form
@@ -236,3 +240,56 @@ async def generate_regex(
         "expected": expected,
         "result": result
     })
+
+
+# --- JMeter Execution and Results ---
+
+@app.get("/execute", response_class=HTMLResponse)
+async def get_execution_page(request: Request):
+    return templates.TemplateResponse("execute.html", {"request": request})
+
+@app.post("/run-jmeter")
+async def run_jmeter_script(background_tasks: BackgroundTasks, jmx_file: UploadFile = File(...)):
+    import datetime
+
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    api_name = os.path.splitext(jmx_file.filename)[0]
+    run_dir = f"results/{api_name}_{timestamp}"
+    os.makedirs(run_dir, exist_ok=True)
+    save_path = f"{run_dir}/{jmx_file.filename}"
+
+    html_report_dir = os.path.join(run_dir, f"{api_name}_html_{timestamp}")
+    os.makedirs(html_report_dir, exist_ok=True)
+
+    with open(save_path, "wb") as f:
+        f.write(await jmx_file.read())
+
+    background_tasks.add_task(run_jmeter, save_path, run_dir, html_report_dir)
+    return JSONResponse({"message": "Test started", "filename": jmx_file.filename})
+
+@app.get("/status")
+def get_status():
+    return {"status": jmeter_status_tracker.get("status", "Not Started")}
+
+@app.get("/results", response_class=HTMLResponse)
+def show_results(request: Request):
+    import glob
+    import os
+
+    result_dirs = sorted(glob.glob("results/*"), key=os.path.getmtime, reverse=True)
+    for dir_path in result_dirs:
+        jtl_files = glob.glob(os.path.join(dir_path, "*.jtl"))
+        if jtl_files:
+            metrics = parse_jtl(jtl_files[0])
+            return templates.TemplateResponse("results.html", {"request": request, "metrics": metrics})
+
+    return templates.TemplateResponse("results.html", {"request": request, "metrics": []})
+
+
+# --- Dashboard Route ---
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def show_dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
