@@ -1,6 +1,4 @@
-from pathlib import Path
-
-execute_html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Execute JMeter Test</title>
@@ -13,38 +11,111 @@ execute_html = """<!DOCTYPE html>
         <button type="submit">Run Test</button>
     </form>
     <p id="status">Waiting to start...</p>
+    <!-- Live JMeter log -->
+    <pre id="jmeter_log"
+         style="background:#111;color:#0f0;padding:10px;
+                border:1px solid #444;height:220px;overflow:auto;">
+(Waiting for log output…)
+    </pre>
+
+    <!-- Download zipped results for this run -->
+    <a id="downloadLink"
+       href="#"
+       style="display:none;margin-top:10px;">Download Results ZIP</a>
+
+    <!-- Response‑time summary will appear here after the test -->
+    <div id="summary" style="display:none;margin-top:20px;">
+        <h2>Response‑time Summary</h2>
+        <table id="summary-table" border="1" cellpadding="6">
+            <thead>
+                <tr>
+                    <th>Transaction</th>
+                    <th>Count</th>
+                    <th>Avg (ms)</th>
+                    <th>Min (ms)</th>
+                    <th>Max (ms)</th>
+                    <th>Error %</th>
+                    <th>Throughput</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         const form = document.getElementById("upload-form");
         const status = document.getElementById("status");
+        console.log("Execute page script loaded");
 
         form.onsubmit = async (e) => {
             e.preventDefault();
             const formData = new FormData(form);
             status.innerText = "Uploading and starting test...";
-            await fetch("/run-jmeter", { method: "POST", body: formData });
+            const resp = await fetch("/run-jmeter", { method: "POST", body: formData });
+            const data = await resp.json();
+            window.currentRunId = data.run_id;     // store run ID for download link
+            console.log("Received run_id:", window.currentRunId);
             pollStatus();
+            pollJMeterLog();
         };
+
+        async function loadSummary() {
+            console.log("loadSummary() invoked");
+            const res = await fetch('/summary');           // new backend route
+            const stats = await res.json();                // statistics.json data
+            console.log("Stats from server:", stats);
+
+            const tbody = document.querySelector('#summary-table tbody');
+            tbody.innerHTML = '';                          // clear old rows
+
+            Object.values(stats).forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.transaction || 'overall'}</td>
+                    <td>${row.sampleCount}</td>
+                    <td>${row.meanResTime}</td>
+                    <td>${row.minResTime}</td>
+                    <td>${row.maxResTime}</td>
+                    <td>${row.errorPct}</td>
+                    <td>${row.throughput}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            // show download link
+            const link = document.getElementById('downloadLink');
+            if (window.currentRunId) {
+                link.href = `/download-results?run_id=${window.currentRunId}`;
+                link.style.display = 'inline-block';
+                console.log("Download link revealed:", link.href);
+            } else {
+                console.warn("No run_id available – download link not shown");
+            }
+            document.getElementById('summary').style.display = 'block';
+        }
 
         function pollStatus() {
             const interval = setInterval(async () => {
                 const res = await fetch("/status");
                 const data = await res.json();
                 status.innerText = "Test Status: " + data.status;
+                console.log("Polled status:", data.status);
 
                 if (data.status.startsWith("Completed")) {
                     clearInterval(interval);
-                    window.location.href = "/results";
+                    await loadSummary();        // show summary table
                 } else if (data.status.startsWith("Failed") || data.status.startsWith("Error")) {
                     clearInterval(interval);
                     alert("Test failed: " + data.status);
                 }
             }, 3000);
         }
+
+        async function pollJMeterLog() {
+            const res  = await fetch('/jmeter-log');
+            const text = await res.text();
+            document.getElementById('jmeter_log').innerText = text;
+            setTimeout(pollJMeterLog, 5000); // refresh every 5 s
+        }
     </script>
 </body>
 </html>
-"""
-
-Path("templates").mkdir(exist_ok=True)
-Path("templates/execute.html").write_text(execute_html)

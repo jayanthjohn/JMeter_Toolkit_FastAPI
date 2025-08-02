@@ -32,6 +32,13 @@ app.include_router(regex.router)
 app.include_router(scriptgen.router)
 app.include_router(chat.router)
 
+import json
+
+@app.get("/metrics")
+def get_metrics():
+    with open("results/status_metrics.json") as f:
+        return json.load(f)
+
 @app.get("/")
 def read_root():
     return {"msg": "JMeter Toolkit FastAPI version running."}
@@ -253,8 +260,9 @@ async def run_jmeter_script(background_tasks: BackgroundTasks, jmx_file: UploadF
     import datetime
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    api_name = os.path.splitext(jmx_file.filename)[0]
-    run_dir = f"results/{api_name}_{timestamp}"
+    api_name  = os.path.splitext(jmx_file.filename)[0]
+    run_id    = f"{api_name}_{timestamp}"
+    run_dir   = f"results/{run_id}"
     os.makedirs(run_dir, exist_ok=True)
     save_path = f"{run_dir}/{jmx_file.filename}"
 
@@ -265,7 +273,11 @@ async def run_jmeter_script(background_tasks: BackgroundTasks, jmx_file: UploadF
         f.write(await jmx_file.read())
 
     background_tasks.add_task(run_jmeter, save_path, run_dir, html_report_dir)
-    return JSONResponse({"message": "Test started", "filename": jmx_file.filename})
+    return JSONResponse({
+        "message": "Test started",
+        "filename": jmx_file.filename,
+        "run_id": run_id
+    })
 
 @app.get("/status")
 def get_status():
@@ -293,3 +305,61 @@ from fastapi.responses import HTMLResponse
 @app.get("/dashboard", response_class=HTMLResponse)
 async def show_dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
+
+
+# --- JMeter Log Route ---
+@app.get("/jmeter-log")
+async def get_jmeter_log():
+    """
+    Return the global results/jmeter.log file so the Execute page can
+    poll a single log path regardless of run folder nesting.
+    """
+    from fastapi.responses import HTMLResponse
+    import os
+
+    log_path = "results/jmeter.log"
+    if os.path.exists(log_path):
+        with open(log_path, "r") as f:
+            return HTMLResponse(f.read(), media_type="text/plain")
+    return HTMLResponse("No log available yet.", media_type="text/plain")
+
+
+# --- Response‑time Summary Route ---
+@app.get("/summary")
+async def get_summary():
+    """
+    Return the newest JMeter statistics.json (HTML report) so the
+    Execute page can render the response‑time table after a run.
+    """
+    import glob, os, json
+
+    stats_files = sorted(
+        glob.glob("results/**/statistics.json", recursive=True),
+        key=os.path.getmtime,
+        reverse=True
+    )
+    if stats_files:
+        with open(stats_files[0], "r") as f:
+            return json.load(f)
+    return {}
+
+
+# --- Download zipped result folder ---
+@app.get("/download-results")
+async def download_results(run_id: str):
+    """
+    Return a ZIP archive of the specified test run's results folder.
+    Front‑end builds the URL as /download-results?run_id=<folder_name>.
+    """
+    import shutil, tempfile, os
+    from fastapi.responses import FileResponse
+
+    folder = os.path.join("results", run_id)
+    if not os.path.isdir(folder):
+        return JSONResponse({"error": "Run not found"}, status_code=404)
+
+    # create temp ZIP
+    tmp_base = tempfile.mktemp()
+    zip_path = shutil.make_archive(tmp_base, 'zip', folder)
+    return FileResponse(zip_path, filename=f"{run_id}.zip",
+                        media_type="application/zip")

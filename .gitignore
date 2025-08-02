@@ -9,3 +9,4 @@ __pycache__/
 # macOS metadata
 .DS_Storeresults/
 jmeter.log
+results

@@ -16,12 +16,40 @@
             }
         }
 
-        window.onload = pollStatus;
+        async function pollMetrics() {
+            const res = await fetch('/metrics');
+            const data = await res.json();
+            document.getElementById("vusers").innerText = data.vusers;
+            document.getElementById("transactions").innerText = data.transactions;
+            document.getElementById("avg_response_time").innerText = data.avg_response_time;
+            document.getElementById("errors").innerText = data.errors;
+            setTimeout(pollMetrics, 3000);
+        }
+
+        async function pollJMeterLog() {
+            const res = await fetch("/jmeter-log");
+            const text = await res.text();
+            document.getElementById("jmeter_log").innerText = text;
+            setTimeout(pollJMeterLog, 3000);
+        }
+
+        window.onload = function () {
+            pollStatus();
+            pollMetrics();
+            pollJMeterLog();
+        };
     </script>
 </head>
 <body>
-    <h1>JMeter Test Dashboard</h1>
+    <h1>JMeter Test Execution Dashboard</h1>
     <p id="status">Status: Loading...</p>
+    <div>
+      <h3>Virtual Users: <span id="vusers">0</span></h3>
+      <h3>Transactions: <span id="transactions">0</span></h3>
+      <h3>Average Response Time: <span id="avg_response_time">0 ms</span></h3>
+      <h3>Errors: <span id="errors">0</span></h3>
+    </div>
     <pre id="log" style="background:#f2f2f2; padding:10px; border:1px solid #ccc; height:300px; overflow:auto;"></pre>
+    <pre id="jmeter_log" style="background: #111; color: #0f0; padding: 10px; height: 200px; overflow: auto;"></pre>
 </body>
 </html>
