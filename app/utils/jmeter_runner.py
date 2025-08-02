@@ -1,9 +1,14 @@
 import subprocess, csv, os, json, datetime, shutil
+import platform
 
 jmeter_status_tracker = {"status": "Not Started"}
 
-# 🔧 Absolute path to your JMeter binary
-JMETER_PATH = "/Users/jayanth/Downloads/apache-jmeter-5.6.3/bin/jmeter"
+# 🔧 Detect JMeter path based on OS and JMeter_HOME env var
+JMETER_HOME = os.getenv('JMETER_HOME', '/Users/jayanth/Downloads/apache-jmeter-5.6.3')
+if platform.system().lower().startswith('win'):
+    JMETER_PATH = os.path.join(JMETER_HOME, 'bin', 'jmeter.bat')
+else:
+    JMETER_PATH = os.path.join(JMETER_HOME, 'bin', 'jmeter')
 
 
 def run_jmeter(jmx_path: str, output_dir: str, html_report_dir: str) -> None:
@@ -49,7 +54,13 @@ def run_jmeter(jmx_path: str, output_dir: str, html_report_dir: str) -> None:
     # -------------------------------------------------------------------------
     # Stream everything directly into jmeter.log --------------------------------
     with open(jmeter_log, "w") as lf:
-        proc = subprocess.Popen(cmd, stdout=lf, stderr=lf, text=True)
+        proc = subprocess.Popen(
+            cmd,
+            stdout=lf,
+            stderr=lf,
+            text=True,
+            shell=platform.system().lower().startswith('win')
+        )
         proc.wait()  # block until JMeter finishes
 
     # -------------------------------------------------------------------------
