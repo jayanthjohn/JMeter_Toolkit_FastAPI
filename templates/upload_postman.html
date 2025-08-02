@@ -2,38 +2,441 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Postman to JMX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Postman to JMX Converter - JMeter Toolkit</title>
+  <!-- Tailwind CDN for quick styling -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Dark Blue Theme Custom Colors */
+    :root {
+      --brand-blue: #0a1628; /* deeper dark blue */
+      --brand-navy: #1e293b; /* navy blue */
+      --brand-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --accent-orange: #f97316;
+      --accent-green: #10b981;
+      --dark-surface: #1e293b;
+      --dark-card: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a1628 0%, #1e293b 50%, #334155 100%);
+      min-height: 100vh;
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #0a1628 0%, #1e293b 30%, #334155 70%, #06b6d4 100%);
+      position: relative;
+    }
+
+    .hero-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(6,182,212,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(236,72,153,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .glass-effect {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(51, 65, 85, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(6, 182, 212, 0.2),
+        0 0 0 1px rgba(6, 182, 212, 0.3);
+      background: rgba(51, 65, 85, 0.95);
+    }
+
+    .upload-zone {
+      transition: all 0.4s ease;
+      border: 2px dashed rgba(6, 182, 212, 0.3);
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--brand-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      transform: scale(1.02);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--brand-cyan);
+      background: rgba(6, 182, 212, 0.2);
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(6, 182, 212, 0.3);
+    }
+
+    .floating-animation {
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-30px) rotate(120deg); }
+      66% { transform: translateY(-15px) rotate(240deg); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), 0 0 60px rgba(6, 182, 212, 0.1); 
+      }
+      50% { 
+        box-shadow: 0 0 50px rgba(6, 182, 212, 0.6), 0 0 100px rgba(6, 182, 212, 0.2); 
+      }
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--accent-purple));
+      transition: all 0.4s ease;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(6, 182, 212, 0.4);
+      background: linear-gradient(135deg, #0891b2, #7c3aed);
+    }
+
+    .geometric-bg {
+      background-image:
+        linear-gradient(45deg, rgba(6, 182, 212, 0.03) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(139, 92, 246, 0.03) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(236, 72, 153, 0.03) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(16, 185, 129, 0.03) 75%);
+      background-size: 80px 80px;
+      background-position: 0 0, 0 40px, 40px -40px, -40px 0px;
+    }
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--brand-cyan), var(--accent-purple));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .success-card {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(6, 182, 212, 0.6);
+      border-radius: 50%;
+      animation: particles 15s linear infinite;
+    }
+
+    @keyframes particles {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .preview-frame {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      backdrop-filter: blur(10px);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans">
-  <div class="max-w-3xl mx-auto py-10 px-6">
-    <h1 class="text-3xl font-bold mb-6 text-center text-gradient bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">Postman → JMX Converter</h1>
+<body class="min-h-screen flex flex-col">
 
-    <!-- Upload Form -->
-    <form method="post" action="/generate-jmx" enctype="multipart/form-data" class="bg-white p-6 rounded shadow-md space-y-4">
-      <div>
-        <label class="block font-semibold text-gray-700 mb-2">Upload Postman Collection (JSON):</label>
-        <input type="file" name="collection_file" accept=".json" required class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  <!-- Animated Particles Background -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="particle w-2 h-2" style="left: 15%; animation-delay: 0s; animation-duration: 20s;"></div>
+    <div class="particle w-1 h-1" style="left: 25%; animation-delay: 3s; animation-duration: 18s;"></div>
+    <div class="particle w-3 h-3" style="left: 35%; animation-delay: 6s; animation-duration: 22s;"></div>
+    <div class="particle w-2 h-2" style="left: 45%; animation-delay: 9s; animation-duration: 19s;"></div>
+    <div class="particle w-1 h-1" style="left: 55%; animation-delay: 12s; animation-duration: 21s;"></div>
+    <div class="particle w-2 h-2" style="left: 65%; animation-delay: 15s; animation-duration: 17s;"></div>
+    <div class="particle w-3 h-3" style="left: 75%; animation-delay: 18s; animation-duration: 23s;"></div>
+    <div class="particle w-1 h-1" style="left: 85%; animation-delay: 21s; animation-duration: 20s;"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="glass-effect sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center gap-2">
+        <img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
+        <span class="font-bold text-xl text-slate-100">JMeter&nbsp;Toolkit</span>
       </div>
-      <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md font-semibold hover:bg-blue-600 transition">
-        Generate JMX
-      </button>
-    </form>
+      <nav class="hidden md:flex space-x-8">
+        <a href="/home" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Home</a>
+        <a href="/csv-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">CSV → JMX</a>
+        <a href="/har-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">HAR → JMX</a>
+        <a href="/postman-to-jmx" class="nav-link text-cyan-400 font-bold">Postman → JMX</a>
+        <a href="/regex-generator" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Regex Generator</a>
+        <a href="http://localhost:8000/execute" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Execute</a>
+        <a href="/chat" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">LLM Chat</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Download link + Preview (if output_path is provided) -->
-    {% if output_path %}
-      <div class="mt-8 p-6 bg-green-100 border border-green-300 rounded-md shadow">
-        <p class="text-green-800 font-semibold">✅ JMX file generated successfully!</p>
-        <a href="{{ output_path }}" download class="text-blue-600 underline hover:text-blue-800 mt-2 inline-block">
-          ⬇ Click here to download the JMX file
+  <!-- Page Header Section -->
+  <section class="hero-gradient relative overflow-hidden py-20 lg:py-32">
+    <div class="absolute inset-0 geometric-bg opacity-40"></div>
+    
+    <!-- Enhanced Floating Elements -->
+    <div class="absolute top-20 left-16 floating-animation">
+      <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full opacity-20 blur-sm"></div>
+    </div>
+    <div class="absolute bottom-20 right-16 floating-animation" style="animation-delay: -3s;">
+      <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-cyan-500 rounded-full opacity-20 blur-sm"></div>
+    </div>
+    <div class="absolute top-1/2 left-8 floating-animation" style="animation-delay: -6s;">
+      <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-15 blur-sm"></div>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto px-4 text-center z-10">
+      <div class="inline-block glass-effect text-orange-400 px-6 py-3 rounded-full text-sm font-bold mb-8">
+        🚀 API Collection Converter
+      </div>
+      <h1 class="text-5xl sm:text-6xl font-bold leading-tight mb-8 text-slate-100">
+        Postman to 
+        <span class="text-gradient">JMeter</span>
+        <br />Converter
+      </h1>
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+        Seamlessly migrate your Postman collections to JMeter test plans. Upload your JSON collection and transform it into enterprise-ready performance tests with full configuration preservation.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-1 py-16 relative z-10">
+    <div class="max-w-4xl mx-auto px-4">
+
+      <!-- Upload Form Card -->
+      <div class="card-hover rounded-3xl p-10 mb-12 shadow-2xl">
+        <form method="post" action="/generate-jmx" enctype="multipart/form-data" class="space-y-10">
+
+          <!-- File Upload Section -->
+          <div>
+            <label class="block text-xl font-bold text-slate-100 mb-6">
+              <svg class="w-7 h-7 inline-block mr-3 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              Upload Postman Collection
+            </label>
+            <div class="upload-zone rounded-3xl p-12 text-center cursor-pointer relative">
+              <input type="file" name="collection_file" accept=".json" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" id="postman-file">
+              <div class="upload-content">
+                <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                </div>
+                <p class="text-xl font-bold text-slate-200 mb-3">Drop your Postman collection here</p>
+                <p class="text-slate-400 text-lg">or click to browse JSON files</p>
+                <p class="text-sm text-slate-500 mt-4">Supports .json collection files up to 50MB</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features Info Section -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card-hover rounded-2xl p-6 text-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h3 class="font-bold text-slate-200 mb-2">Request Preservation</h3>
+              <p class="text-slate-400 text-sm">All HTTP methods, headers, and parameters preserved</p>
+            </div>
+            <div class="card-hover rounded-2xl p-6 text-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <h3 class="font-bold text-slate-200 mb-2">Variables & Logic</h3>
+              <p class="text-slate-400 text-sm">Environment variables and test logic converted</p>
+            </div>
+            <div class="card-hover rounded-2xl p-6 text-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-cyan-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+              </div>
+              <h3 class="font-bold text-slate-200 mb-2">Enterprise Ready</h3>
+              <p class="text-slate-400 text-sm">Production-ready JMeter test plans</p>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center pt-4">
+            <button type="submit" class="btn-primary text-white font-bold py-5 px-16 rounded-full shadow-2xl transform hover:scale-105 transition-all pulse-glow text-lg">
+              <svg class="w-6 h-6 inline-block mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              Convert to JMX
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Success Section -->
+      {% if output_path %}
+      <div class="success-card rounded-3xl p-10 mb-12 shadow-2xl">
+        <div class="text-center mb-8">
+          <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h2 class="text-3xl font-bold text-slate-100 mb-4">🎉 JMX File Generated Successfully!</h2>
+          <p class="text-slate-300 text-lg">Your Postman collection has been converted to a JMeter test plan</p>
+        </div>
+
+        <div class="flex justify-center">
+          <a href="{{ output_path }}" download class="btn-primary text-white font-bold py-4 px-12 rounded-full shadow-lg hover:scale-105 transition-all text-lg">
+            <svg class="w-6 h-6 inline-block mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Download JMX File
+          </a>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="card-hover rounded-3xl p-10 mb-12 shadow-2xl">
+        <div class="mb-6">
+          <h3 class="text-2xl font-bold text-slate-100 mb-4 flex items-center">
+            <svg class="w-7 h-7 mr-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            JMX File Preview
+          </h3>
+          <p class="text-slate-400">Review your generated JMeter test plan</p>
+        </div>
+        <div class="preview-frame rounded-2xl overflow-hidden">
+          <iframe src="{{ output_path }}" class="w-full h-96 rounded-2xl" title="JMX Preview"></iframe>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Back to Home Button -->
+      <div class="text-center mt-12">
+        <a href="/home" class="inline-flex items-center text-slate-400 hover:text-cyan-400 font-semibold transition-colors text-lg">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Home
         </a>
       </div>
 
-      <div class="mt-6">
-        <h2 class="text-lg font-semibold mb-2">📄 Preview:</h2>
-        <iframe src="{{ output_path }}" class="w-full h-96 border rounded" title="JMX Preview"></iframe>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="glass-effect text-slate-300 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 py-8 text-sm flex flex-col sm:flex-row justify-between gap-4">
+      <div>© 2025 JMeter Toolkit</div>
+      <div class="space-x-6">
+        <a href="#" class="hover:text-cyan-400 transition-colors">Privacy</a>
+        <a href="#" class="hover:text-cyan-400 transition-colors">Terms</a>
+        <a href="#" class="hover:text-cyan-400 transition-colors">Contact</a>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  </footer>
+
+  <script>
+    // Enhanced file upload functionality
+    const uploadZone = document.querySelector('.upload-zone');
+    const fileInput = document.querySelector('#postman-file');
+    const uploadContent = document.querySelector('.upload-content');
+
+    // Drag and drop functionality
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        updateUploadDisplay(files[0]);
+      }
+    });
+
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        updateUploadDisplay(e.target.files[0]);
+      }
+    });
+
+    // Update upload display when file is selected
+    function updateUploadDisplay(file) {
+      uploadContent.innerHTML = `
+        <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <p class="text-xl font-bold text-slate-200 mb-3">✅ ${file.name}</p>
+        <p class="text-slate-400 text-lg">Collection ready for conversion</p>
+        <p class="text-sm text-slate-500 mt-4">Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+      `;
+    }
+  </script>
+
 </body>
 </html>

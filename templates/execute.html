@@ -1,291 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Execute JMeter Test</title>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execute JMeter Test - JMeter Toolkit</title>
+    <!-- Tailwind CDN for quick styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Custom brand colors */
+        :root {
+            --brand-blue: #1e3a8a;
+            --brand-navy: #0f172a;
+            --brand-cyan: #06b6d4;
+            --brand-purple: #8b5cf6;
+            --brand-pink: #ec4899;
+            --brand-orange: #f97316;
+            --brand-green: #10b981;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0066cc 0%, #003d7a 50%, #001f3f 100%);
+            background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 50%, #1e40af 100%);
             min-height: 100vh;
-            color: #333;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        .glass-effect {
+            background: rgba(30, 58, 138, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 40px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 50%, var(--brand-cyan) 100%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--brand-cyan), var(--brand-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            background: rgba(30, 58, 138, 0.05);
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .header h1 {
-            font-size: 3rem;
-            color: #0066cc;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
+            border-color: rgba(6, 182, 212, 0.3);
         }
 
-        .header .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 20px;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-cyan), var(--brand-purple));
+            transition: all 0.3s ease;
+            border: none;
         }
 
-        .header .logo-accent {
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #ff6b35, #f7931e, #0066cc);
-            margin: 20px auto;
-            border-radius: 2px;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
         }
 
-        .main-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--brand-orange), var(--brand-pink));
+            transition: all 0.3s ease;
+            border: none;
         }
 
-        .upload-section {
-            text-align: center;
-            margin-bottom: 30px;
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
         }
 
-        .upload-section h2 {
-            color: #0066cc;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
+        .btn-success {
+            background: linear-gradient(135deg, var(--brand-green), #059669);
+            transition: all 0.3s ease;
+            border: none;
         }
 
-        #upload-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
         }
 
-        .file-input-wrapper {
+        .nav-link {
             position: relative;
-            display: inline-block;
+            transition: all 0.3s ease;
         }
 
-        input[type="file"] {
+        .nav-link:hover {
+            color: var(--brand-cyan);
+        }
+
+        .nav-link.active {
+            color: var(--brand-cyan);
+        }
+
+        .nav-link.active::after {
+            content: '';
             position: absolute;
-            opacity: 0;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--brand-cyan), var(--brand-purple));
+            border-radius: 1px;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            cursor: pointer;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .file-input-label {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #f7931e, #ff6b35);
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(247, 147, 30, 0.3);
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(6, 182, 212, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
         }
 
-        .file-input-label:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(247, 147, 30, 0.4);
+        @keyframes float {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1);
+            }
         }
 
-        button[type="submit"] {
-            background: linear-gradient(135deg, #0066cc, #003d7a);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
-        }
-
-        button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
-        }
-
-        #status {
-            text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: linear-gradient(135deg, #e8f4fd, #d1e9f8);
-            border-radius: 10px;
-            border-left: 5px solid #0066cc;
-            font-weight: 600;
-            color: #0066cc;
-        }
-
-        #jmeter_log {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            color: #00ff00;
-            padding: 20px;
-            border: 2px solid #0066cc;
-            border-radius: 15px;
-            height: 250px;
-            overflow: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-            margin: 20px 0;
-        }
-
-        .log-header {
-            color: #0066cc;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        #downloadLink {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        #downloadLink:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        #summary {
-            margin-top: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-            border: 2px solid #0066cc;
-        }
-
-        #summary h2 {
-            color: #0066cc;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.8rem;
-        }
-
-        #summary-table {
+        .floating-shapes {
+            position: absolute;
             width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
+            height: 100%;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1;
         }
 
-        #summary-table th {
-            background: linear-gradient(135deg, #0066cc, #003d7a);
-            color: white;
-            padding: 15px 10px;
-            font-weight: 600;
-            text-align: center;
+        .floating-shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatShape 20s infinite linear;
         }
 
-        #summary-table td {
-            padding: 12px 10px;
-            text-align: center;
-            border-bottom: 1px solid #e9ecef;
-            transition: background-color 0.2s ease;
-        }
-
-        #summary-table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        #summary-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .feature-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            border-top: 4px solid;
-        }
-
-        .feature-card:nth-child(1) {
-            border-top-color: #ff6b35;
-        }
-
-        .feature-card:nth-child(2) {
-            border-top-color: #f7931e;
-        }
-
-        .feature-card:nth-child(3) {
-            border-top-color: #0066cc;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-card h3 {
-            color: #0066cc;
-            margin-bottom: 10px;
-        }
-
-        .feature-card p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
+        @keyframes floatShape {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
             }
-
-            .main-card {
-                padding: 20px;
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
             }
+        }
 
-            #upload-form {
-                gap: 15px;
-            }
+        .upload-zone {
+            border: 2px dashed rgba(6, 182, 212, 0.3);
+            transition: all 0.3s ease;
+        }
 
-            .file-input-label,
-            button[type="submit"] {
-                padding: 12px 25px;
-            }
+        .upload-zone:hover {
+            border-color: var(--brand-cyan);
+            background: rgba(6, 182, 212, 0.05);
+        }
+
+        .log-container {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-running {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+            border-left: 4px solid var(--brand-cyan);
+            color: var(--brand-cyan);
+        }
+
+        .status-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            border-left: 4px solid var(--brand-green);
+            color: var(--brand-green);
+        }
+
+        .status-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+            border-left: 4px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .status-warning {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05));
+            border-left: 4px solid var(--brand-orange);
+            color: var(--brand-orange);
         }
 
         .pulse {
@@ -294,82 +216,262 @@
 
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.7);
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(0, 102, 204, 0);
+                box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(0, 102, 204, 0);
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
             }
+        }
+
+        .table-glow {
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.1);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>JMeter Test Runner</h1>
-            <div class="logo-accent"></div>
-            <p class="subtitle">Professional Performance Testing Platform</p>
-        </div>
+<body class="min-h-screen flex flex-col text-slate-100 relative">
 
-        <div class="main-card">
-            <div class="upload-section">
-                <h2>Execute Performance Test</h2>
-                <form id="upload-form" enctype="multipart/form-data">
-                    <div class="file-input-wrapper">
-                        <input type="file" name="jmx_file" accept=".jmx" required>
-                        <label class="file-input-label">
-                            📁 Choose JMX File
-                        </label>
-                    </div>
-                    <button type="submit" class="pulse">🚀 Run Test</button>
-                </form>
-            </div>
-
-            <p id="status">Ready to start your performance test...</p>
-
-            <div class="feature-cards">
-                <div class="feature-card">
-                    <h3>📊 Real-time Monitoring</h3>
-                    <p>Watch your test execution in real-time with live log streaming</p>
-                </div>
-                <div class="feature-card">
-                    <h3>📈 Detailed Analytics</h3>
-                    <p>Get comprehensive performance metrics and response time analysis</p>
-                </div>
-                <div class="feature-card">
-                    <h3>💾 Export Results</h3>
-                    <p>Download complete test results as ZIP for further analysis</p>
-                </div>
-            </div>
-
-            <div class="log-header">Live Test Execution Log</div>
-            <pre id="jmeter_log">(Waiting for log output…)</pre>
-
-            <a id="downloadLink" href="#" style="display:none;">
-                📦 Download Results ZIP
-            </a>
-
-            <div id="summary" style="display:none;">
-                <h2>📊 Performance Summary</h2>
-                <table id="summary-table" border="0" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Transaction</th>
-                            <th>Count</th>
-                            <th>Avg (ms)</th>
-                            <th>Min (ms)</th>
-                            <th>Max (ms)</th>
-                            <th>Error %</th>
-                            <th>Throughput</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+    <!-- Animated background particles -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 0.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
     </div>
+
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+            <div class="flex items-center gap-2">
+                <img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
+                <span class="font-semibold text-xl text-slate-100">JMeter&nbsp;Toolkit</span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="/home" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">Home</a>
+                <a href="/csv-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">CSV → JMX</a>
+                <a href="/har-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">HAR → JMX</a>
+                <a href="/postman-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">Postman → JMX</a>
+                <a href="/regex-generator" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">Regex Generator</a>
+                <a href="/k6-editor" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">K6 Editor</a>
+                <a href="/chat" class="nav-link text-slate-300 hover:text-cyan-400 transition-all duration-300 font-medium">LLM Chat</a>
+                <a href="http://localhost:8000/execute" class="nav-link active text-cyan-400 font-semibold">Execute</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="flex-1 relative z-10">
+        <!-- Hero Section -->
+        <section class="hero-gradient relative overflow-hidden py-16">
+            <div class="floating-shapes">
+                <div class="floating-shape w-32 h-32 bg-cyan-500 rounded-full" style="left: 10%; animation-delay: 0s;"></div>
+                <div class="floating-shape w-24 h-24 bg-purple-500 rounded-full" style="left: 70%; animation-delay: 10s;"></div>
+                <div class="floating-shape w-16 h-16 bg-pink-500 rounded-full" style="left: 90%; animation-delay: 15s;"></div>
+            </div>
+            <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+                <div class="inline-block glass-effect text-green-400 px-6 py-3 rounded-full text-sm font-bold mb-8">
+                    🚀 Performance Test Execution
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-bold text-slate-100 mb-6 leading-tight">
+                    JMeter Test Runner
+                    <span class="text-gradient block text-3xl lg:text-4xl mt-2">Professional Testing Platform</span>
+                </h1>
+                <p class="text-lg lg:text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+                    Execute your JMeter performance tests with real-time monitoring, detailed analytics, and comprehensive reporting
+                </p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section class="py-12">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <!-- Upload Section -->
+                <div class="card-hover rounded-3xl p-8 shadow-2xl mb-8">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-slate-100 mb-4">Execute Performance Test</h2>
+                        <p class="text-slate-300">Upload your JMX file and start your performance test</p>
+                    </div>
+
+                    <form id="upload-form" enctype="multipart/form-data" class="flex flex-col items-center gap-6">
+                        <div class="upload-zone w-full max-w-md p-8 rounded-2xl text-center">
+                            <input type="file" name="jmx_file" accept=".jmx" required class="hidden" id="jmx-file-input">
+                            <label for="jmx-file-input" class="cursor-pointer block">
+                                <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-slate-200 font-medium" id="file-label">📁 Choose JMX File</span>
+                                <p class="text-slate-400 text-sm mt-2">Drag and drop or click to select your JMeter test plan</p>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-primary text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2 pulse">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            🚀 Run Test
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Status Section -->
+                <div class="card-hover rounded-3xl p-6 shadow-2xl mb-8">
+                    <div id="status" class="status-running glass-effect rounded-xl p-4 text-center font-semibold">
+                        Ready to start your performance test...
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="card-hover rounded-3xl p-6 shadow-2xl text-center">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-100 mb-2">📊 Real-time Monitoring</h3>
+                        <p class="text-slate-300 text-sm">Watch your test execution in real-time with live log streaming</p>
+                    </div>
+                    <div class="card-hover rounded-3xl p-6 shadow-2xl text-center">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-100 mb-2">📈 Detailed Analytics</h3>
+                        <p class="text-slate-300 text-sm">Get comprehensive performance metrics and response time analysis</p>
+                    </div>
+                    <div class="card-hover rounded-3xl p-6 shadow-2xl text-center">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-100 mb-2">💾 Export Results</h3>
+                        <p class="text-slate-300 text-sm">Download complete test results as ZIP for further analysis</p>
+                    </div>
+                </div>
+
+                <!-- Log Section -->
+                <div class="card-hover rounded-3xl p-6 shadow-2xl mb-8">
+                    <h3 class="text-xl font-semibold text-slate-100 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Live Test Execution Log
+                    </h3>
+                    <pre id="jmeter_log" class="log-container text-green-300 p-4 rounded-xl h-64 overflow-auto text-sm">(Waiting for log output…)</pre>
+                </div>
+
+                <!-- Download Link -->
+                <div class="text-center mb-8">
+                    <a id="downloadLink" href="#" style="display:none;" class="btn-success text-white px-8 py-3 rounded-xl font-semibold inline-flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        📦 Download Results ZIP
+                    </a>
+                </div>
+
+                <!-- Summary Section -->
+                <div id="summary" style="display:none;" class="card-hover rounded-3xl p-6 shadow-2xl table-glow">
+                    <h2 class="text-2xl font-bold text-slate-100 mb-6 text-center flex items-center justify-center gap-2">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        📊 Performance Summary
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table id="summary-table" class="w-full glass-effect rounded-xl overflow-hidden">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-blue-600 to-cyan-600">
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Transaction</th>
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Count</th>
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Avg (ms)</th>
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Min (ms)</th>
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Max (ms)</th>
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Error %</th>
+                                    <th class="px-4 py-3 text-white font-semibold text-center">Throughput</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-effect text-slate-100 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="/static/img/Logo2.png" alt="logo" class="h-10 w-auto" />
+                        <span class="font-semibold text-xl">JMeter Toolkit</span>
+                    </div>
+                    <p class="text-slate-400 mb-4 max-w-md">
+                        Empowering performance engineers with cutting-edge tools for efficient and comprehensive testing workflows.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Converting Tools</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="/csv-to-jmx" class="hover:text-cyan-400 transition-colors">CSV to JMX</a></li>
+                        <li><a href="/har-to-jmx" class="hover:text-cyan-400 transition-colors">HAR to JMX</a></li>
+                        <li><a href="/postman-to-jmx" class="hover:text-cyan-400 transition-colors">Postman to JMX</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Development Tools</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="/regex-generator" class="hover:text-cyan-400 transition-colors">Regex Generator</a></li>
+                        <li><a href="/k6-editor" class="hover:text-cyan-400 transition-colors">K6 Editor</a></li>
+                        <li><a href="/chat" class="hover:text-cyan-400 transition-colors">LLM Chat</a></li>
+                        <li><span class="text-slate-500">JSON Formatter (Coming Soon)</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-700 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <div class="text-slate-400">© 2025 JMeter Toolkit. All rights reserved.</div>
+                <div class="mt-4 sm:mt-0 space-x-6 text-slate-400">
+                    <a href="#" class="hover:text-cyan-400 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         const form = document.getElementById("upload-form");
@@ -380,9 +482,7 @@
             e.preventDefault();
             const formData = new FormData(form);
             status.innerHTML = "🔄 Uploading and starting test...";
-            status.style.background = "linear-gradient(135deg, #fff3cd, #ffeaa7)";
-            status.style.borderLeftColor = "#f7931e";
-            status.style.color = "#856404";
+            status.className = "status-warning glass-effect rounded-xl p-4 text-center font-semibold";
 
             const resp = await fetch("/run-jmeter", { method: "POST", body: formData });
             const data = await resp.json();
@@ -403,21 +503,22 @@
 
             Object.values(stats).forEach(row => {
                 const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-700/30 transition-colors';
                 tr.innerHTML = `
-                    <td>${row.transaction || 'overall'}</td>
-                    <td>${row.sampleCount}</td>
-                    <td>${row.meanResTime}</td>
-                    <td>${row.minResTime}</td>
-                    <td>${row.maxResTime}</td>
-                    <td>${row.errorPct}</td>
-                    <td>${row.throughput}</td>`;
+                    <td class="px-4 py-3 text-center">${row.transaction || 'overall'}</td>
+                    <td class="px-4 py-3 text-center">${row.sampleCount}</td>
+                    <td class="px-4 py-3 text-center">${row.meanResTime}</td>
+                    <td class="px-4 py-3 text-center">${row.minResTime}</td>
+                    <td class="px-4 py-3 text-center">${row.maxResTime}</td>
+                    <td class="px-4 py-3 text-center">${row.errorPct}</td>
+                    <td class="px-4 py-3 text-center">${row.throughput}</td>`;
                 tbody.appendChild(tr);
             });
 
             const link = document.getElementById('downloadLink');
             if (window.currentRunId) {
                 link.href = `/download-results?run_id=${window.currentRunId}`;
-                link.style.display = 'inline-block';
+                link.style.display = 'inline-flex';
                 console.log("Download link revealed:", link.href);
             } else {
                 console.warn("No run_id available – download link not shown");
@@ -432,23 +533,17 @@
 
                 if (data.status.startsWith("Completed")) {
                     status.innerHTML = "✅ Test Status: " + data.status;
-                    status.style.background = "linear-gradient(135deg, #d4edda, #c3e6cb)";
-                    status.style.borderLeftColor = "#28a745";
-                    status.style.color = "#155724";
+                    status.className = "status-success glass-effect rounded-xl p-4 text-center font-semibold";
                     clearInterval(interval);
                     await loadSummary();
                 } else if (data.status.startsWith("Failed") || data.status.startsWith("Error")) {
                     status.innerHTML = "❌ Test Status: " + data.status;
-                    status.style.background = "linear-gradient(135deg, #f8d7da, #f5c6cb)";
-                    status.style.borderLeftColor = "#dc3545";
-                    status.style.color = "#721c24";
+                    status.className = "status-error glass-effect rounded-xl p-4 text-center font-semibold";
                     clearInterval(interval);
                     alert("Test failed: " + data.status);
                 } else {
                     status.innerHTML = "🔄 Test Status: " + data.status;
-                    status.style.background = "linear-gradient(135deg, #cce5ff, #b3d9ff)";
-                    status.style.borderLeftColor = "#0066cc";
-                    status.style.color = "#004085";
+                    status.className = "status-running glass-effect rounded-xl p-4 text-center font-semibold";
                 }
 
                 console.log("Polled status:", data.status);
@@ -463,14 +558,14 @@
         }
 
         // Add file name display
-        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
-            const label = document.querySelector('.file-input-label');
+        document.getElementById('jmx-file-input').addEventListener('change', function(e) {
+            const label = document.getElementById('file-label');
             if (e.target.files.length > 0) {
                 label.innerHTML = `📁 ${e.target.files[0].name}`;
-                label.style.background = "linear-gradient(135deg, #28a745, #20c997)";
+                label.style.color = '#10b981';
             } else {
                 label.innerHTML = "📁 Choose JMX File";
-                label.style.background = "linear-gradient(135deg, #f7931e, #ff6b35)";
+                label.style.color = '';
             }
         });
     </script>

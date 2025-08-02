@@ -1,7 +1,11 @@
 import subprocess, csv, os, json, datetime, shutil
 import platform
 
-jmeter_status_tracker = {"status": "Not Started"}
+jmeter_status_tracker = {
+    "status": "Not Started",
+    "current_run_id": None,
+    "current_run_dir": None
+}
 
 # 🔧 Detect JMeter path based on OS and JMeter_HOME env var
 JMETER_HOME = os.getenv('JMETER_HOME', '/Users/jayanth/Downloads/apache-jmeter-5.6.3')
