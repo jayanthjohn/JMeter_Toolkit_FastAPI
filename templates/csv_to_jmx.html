@@ -7,82 +7,143 @@
   <!-- Tailwind CDN for quick styling -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Cognizant-inspired color palette */
+    /* Dark Blue Theme Custom Colors */
     :root {
-      --cognizant-navy: #1a1f3a;
-      --cognizant-blue: #2d4a87;
-      --cognizant-light-blue: #4a90e2;
-      --cognizant-cyan: #00bcd4;
-      --cognizant-purple: #6366f1;
-      --cognizant-gradient-start: #1a1f3a;
-      --cognizant-gradient-end: #2d4a87;
+      --brand-blue: #0a1628; /* deeper dark blue */
+      --brand-navy: #1e293b; /* navy blue */
+      --brand-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --accent-orange: #f97316;
+      --accent-green: #10b981;
+      --dark-surface: #1e293b;
+      --dark-card: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
     }
 
-    .cognizant-gradient {
-      background: linear-gradient(135deg, var(--cognizant-navy) 0%, var(--cognizant-blue) 50%, #4a5568 100%);
+    body {
+      background: linear-gradient(135deg, #0a1628 0%, #1e293b 50%, #334155 100%);
+      min-height: 100vh;
     }
 
-    .feature-gradient-1 {
-      background: linear-gradient(135deg, #4a90e2 0%, #00bcd4 100%);
+    .hero-gradient {
+      background: linear-gradient(135deg, #0a1628 0%, #1e293b 30%, #334155 70%, #06b6d4 100%);
+      position: relative;
     }
 
-    .upload-zone {
-      transition: all 0.3s ease;
-      border: 2px dashed #e5e7eb;
+    .hero-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(6,182,212,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(236,72,153,0.05) 0%, transparent 50%);
+      pointer-events: none;
     }
 
-    .upload-zone:hover {
-      border-color: var(--cognizant-cyan);
-      background-color: rgba(0, 188, 212, 0.05);
-    }
-
-    .upload-zone.dragover {
-      border-color: var(--cognizant-cyan);
-      background-color: rgba(0, 188, 212, 0.1);
-      transform: scale(1.02);
-    }
-
-    .floating-animation {
-      animation: float 6s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-    }
-
-    .pulse-glow {
-      animation: pulse-glow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulse-glow {
-      from { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
-      to { box-shadow: 0 0 30px rgba(74, 144, 226, 0.8); }
+    .glass-effect {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(6, 182, 212, 0.2);
     }
 
     .card-hover {
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(51, 65, 85, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(6, 182, 212, 0.2);
     }
 
     .card-hover:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(6, 182, 212, 0.2),
+        0 0 0 1px rgba(6, 182, 212, 0.3);
+      background: rgba(51, 65, 85, 0.95);
+    }
+
+    .upload-zone {
+      transition: all 0.4s ease;
+      border: 2px dashed rgba(6, 182, 212, 0.3);
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--brand-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      transform: scale(1.02);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--brand-cyan);
+      background: rgba(6, 182, 212, 0.2);
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(6, 182, 212, 0.3);
+    }
+
+    .floating-animation {
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-30px) rotate(120deg); }
+      66% { transform: translateY(-15px) rotate(240deg); }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), 0 0 60px rgba(6, 182, 212, 0.1); 
+      }
+      50% { 
+        box-shadow: 0 0 50px rgba(6, 182, 212, 0.6), 0 0 100px rgba(6, 182, 212, 0.2); 
+      }
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--accent-purple));
+      transition: all 0.4s ease;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(6, 182, 212, 0.4);
+      background: linear-gradient(135deg, #0891b2, #7c3aed);
     }
 
     .checkbox-custom {
       appearance: none;
       width: 1.5rem;
       height: 1.5rem;
-      border: 2px solid #e5e7eb;
+      border: 2px solid rgba(6, 182, 212, 0.5);
       border-radius: 0.375rem;
       position: relative;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s;
+      background: rgba(30, 41, 59, 0.5);
     }
 
     .checkbox-custom:checked {
-      background-color: var(--cognizant-cyan);
-      border-color: var(--cognizant-cyan);
+      background: linear-gradient(135deg, var(--brand-cyan), var(--accent-purple));
+      border-color: var(--brand-cyan);
     }
 
     .checkbox-custom:checked::after {
@@ -98,135 +159,198 @@
 
     .geometric-bg {
       background-image:
-        linear-gradient(45deg, rgba(74, 144, 226, 0.1) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(74, 144, 226, 0.1) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(74, 144, 226, 0.1) 75%),
-        linear-gradient(-45deg, transparent 75%, rgba(74, 144, 226, 0.1) 75%);
-      background-size: 60px 60px;
-      background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+        linear-gradient(45deg, rgba(6, 182, 212, 0.03) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(139, 92, 246, 0.03) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(236, 72, 153, 0.03) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(16, 185, 129, 0.03) 75%);
+      background-size: 80px 80px;
+      background-position: 0 0, 0 40px, 40px -40px, -40px 0px;
+    }
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--brand-cyan), var(--accent-purple));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .option-card {
+      background: rgba(51, 65, 85, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .option-card:hover {
+      background: rgba(51, 65, 85, 0.8);
+      border-color: rgba(6, 182, 212, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(6, 182, 212, 0.6);
+      border-radius: 50%;
+      animation: particles 15s linear infinite;
+    }
+
+    @keyframes particles {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50">
+<body class="min-h-screen flex flex-col">
 
-  <!-- ─── Header / Nav Bar ─────────────────────────────────────────────── -->
-  <header class="bg-white shadow sticky top-0 z-50">
+  <!-- Animated Particles Background -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="particle w-2 h-2" style="left: 15%; animation-delay: 0s; animation-duration: 20s;"></div>
+    <div class="particle w-1 h-1" style="left: 25%; animation-delay: 3s; animation-duration: 18s;"></div>
+    <div class="particle w-3 h-3" style="left: 35%; animation-delay: 6s; animation-duration: 22s;"></div>
+    <div class="particle w-2 h-2" style="left: 45%; animation-delay: 9s; animation-duration: 19s;"></div>
+    <div class="particle w-1 h-1" style="left: 55%; animation-delay: 12s; animation-duration: 21s;"></div>
+    <div class="particle w-2 h-2" style="left: 65%; animation-delay: 15s; animation-duration: 17s;"></div>
+    <div class="particle w-3 h-3" style="left: 75%; animation-delay: 18s; animation-duration: 23s;"></div>
+    <div class="particle w-1 h-1" style="left: 85%; animation-delay: 21s; animation-duration: 20s;"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="glass-effect sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-      <!-- logo -->
       <div class="flex items-center gap-2">
         <img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
-        <span class="font-semibold text-xl text-gray-800">JMeter&nbsp;Toolkit</span>
+        <span class="font-bold text-xl text-slate-100">JMeter&nbsp;Toolkit</span>
       </div>
-      <!-- nav links -->
       <nav class="hidden md:flex space-x-8">
-        <a href="/home" class="text-gray-700 hover:text-blue-600 transition-colors">Home</a>
-        <a href="/csv-to-jmx" class="text-blue-600 font-semibold">CSV → JMX</a>
-        <a href="/har-to-jmx" class="text-gray-700 hover:text-blue-600 transition-colors">HAR → JMX</a>
-        <a href="/postman-to-jmx" class="text-gray-700 hover:text-blue-600 transition-colors">Postman → JMX</a>
-        <a href="/chat" class="text-gray-700 hover:text-blue-600 transition-colors">LLM Chat</a>
+        <a href="/home" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Home</a>
+        <a href="/csv-to-jmx" class="nav-link text-cyan-400 font-bold">CSV → JMX</a>
+        <a href="/har-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">HAR → JMX</a>
+        <a href="/postman-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Postman → JMX</a>
+        <a href="/regex-generator" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Regex Generator</a>
+        <a href="http://localhost:8000/execute" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Execute</a>
+        <a href="/chat" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">LLM Chat</a>
       </nav>
-      <!-- search box -->
-      <form class="hidden md:block relative">
-        <input type="text" placeholder="Search" class="border rounded-full pl-4 pr-8 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
-        <svg class="w-4 h-4 absolute right-2 top-1.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" /></svg>
-      </form>
     </div>
   </header>
 
-  <!-- ─── Page Header Section ─────────────────────────────────────────────────── -->
-<section class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white py-16 relative overflow-hidden">
-  <!-- Floating background elements -->
-  <div class="absolute top-10 right-10 w-32 h-32 bg-white rounded-full opacity-10 floating-animation"></div>
-  <div class="absolute bottom-10 left-10 w-24 h-24 bg-white rounded-full opacity-10 floating-animation" style="animation-delay: -2s;"></div>
-
-  <!-- Geometric overlay elements with blue gradient fill -->
-  <div class="absolute top-20 left-20 w-16 h-16 rounded-lg transform rotate-12 bg-gradient-to-br from-blue-400 to-blue-700 opacity-50"></div>
-  <div class="absolute bottom-20 right-20 w-12 h-12 rounded-full bg-gradient-to-br from-cyan-300 to-blue-500 opacity-50"></div>
-
-  <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
-    <div class="inline-block bg-white bg-opacity-20 backdrop-blur text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-      📊 Enterprise CSV Converter
+  <!-- Page Header Section -->
+  <section class="hero-gradient relative overflow-hidden py-20 lg:py-32">
+    <div class="absolute inset-0 geometric-bg opacity-40"></div>
+    
+    <!-- Enhanced Floating Elements -->
+    <div class="absolute top-20 left-16 floating-animation">
+      <div class="w-20 h-20 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full opacity-20 blur-sm"></div>
     </div>
-    <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">CSV to JMX / K6 Script Generator</h1>
-    <p class="text-lg text-blue-100 max-w-2xl mx-auto">
-      Transform your CSV data into enterprise-grade JMeter test plans or K6 scripts with our intelligent conversion platform. Upload, configure, and deploy in seconds.
-    </p>
-  </div>
-</section>
+    <div class="absolute bottom-20 right-16 floating-animation" style="animation-delay: -3s;">
+      <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-orange-500 rounded-full opacity-20 blur-sm"></div>
+    </div>
+    <div class="absolute top-1/2 left-8 floating-animation" style="animation-delay: -6s;">
+      <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-15 blur-sm"></div>
+    </div>
 
-  <!-- ─── Main Content ─────────────────────────────────────────────────── -->
-  <main class="flex-1 py-12">
+    <div class="relative max-w-4xl mx-auto px-4 text-center z-10">
+      <div class="inline-block glass-effect text-cyan-400 px-6 py-3 rounded-full text-sm font-bold mb-8">
+        📊 Enterprise CSV Converter
+      </div>
+      <h1 class="text-5xl sm:text-6xl font-bold leading-tight mb-8 text-slate-100">
+        CSV to 
+        <span class="text-gradient">JMX & K6</span>
+        <br />Script Generator
+      </h1>
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+        Transform your CSV data into enterprise-grade JMeter test plans or K6 scripts with our intelligent conversion platform. Upload, configure, and deploy in seconds.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-1 py-16 relative z-10">
     <div class="max-w-4xl mx-auto px-4">
 
       <!-- Upload Form Card -->
-      <div class="bg-white rounded-3xl shadow-xl p-8 mb-8 card-hover">
-        <form action="/generate-scripts" method="post" enctype="multipart/form-data" class="space-y-8">
+      <div class="card-hover rounded-3xl p-10 mb-12 shadow-2xl">
+        <form action="/generate-scripts" method="post" enctype="multipart/form-data" class="space-y-10">
 
           <!-- File Upload Section -->
           <div>
-            <label class="block text-lg font-semibold text-gray-800 mb-4">
-              <svg class="w-6 h-6 inline-block mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <label class="block text-xl font-bold text-slate-100 mb-6">
+              <svg class="w-7 h-7 inline-block mr-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
               </svg>
               Upload CSV File
             </label>
-            <div class="upload-zone rounded-2xl p-8 text-center cursor-pointer relative">
+            <div class="upload-zone rounded-3xl p-12 text-center cursor-pointer relative">
               <input type="file" id="file" name="file" accept=".csv" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
               <div class="upload-content">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-20 h-20 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
                 </div>
-                <p class="text-lg font-semibold text-gray-700 mb-2">Drop your CSV file here</p>
-                <p class="text-gray-500">or click to browse</p>
-                <p class="text-sm text-gray-400 mt-2">Supports .csv files up to 10MB</p>
+                <p class="text-xl font-bold text-slate-200 mb-3">Drop your CSV file here</p>
+                <p class="text-slate-400 text-lg">or click to browse</p>
+                <p class="text-sm text-slate-500 mt-4">Supports .csv files up to 10MB</p>
               </div>
             </div>
           </div>
 
           <!-- Output Options Section -->
           <div>
-            <label class="block text-lg font-semibold text-gray-800 mb-6">
-              <svg class="w-6 h-6 inline-block mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <label class="block text-xl font-bold text-slate-100 mb-8">
+              <svg class="w-7 h-7 inline-block mr-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
               Select Output Type(s)
             </label>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <!-- JMeter Option -->
-              <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-transparent hover:border-blue-200 transition-all">
-                <label class="flex items-start space-x-4 cursor-pointer">
+              <div class="option-card rounded-3xl p-8 hover:shadow-lg">
+                <label class="flex items-start space-x-5 cursor-pointer">
                   <input type="checkbox" name="output_types" value="JMeter (.jmx)" checked class="checkbox-custom mt-1">
                   <div class="flex-1">
-                    <div class="flex items-center mb-2">
-                      <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center mb-4">
+                      <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                       </div>
-                      <span class="font-semibold text-gray-800">JMeter (.jmx)</span>
+                      <span class="font-bold text-xl text-slate-100">JMeter (.jmx)</span>
                     </div>
-                    <p class="text-sm text-gray-600">Generate Apache JMeter test plan files for enterprise load testing</p>
+                    <p class="text-slate-400 leading-relaxed">Generate Apache JMeter test plan files for enterprise load testing with comprehensive configuration options</p>
                   </div>
                 </label>
               </div>
 
               <!-- K6 Option -->
-              <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border-2 border-transparent hover:border-indigo-200 transition-all">
-                <label class="flex items-start space-x-4 cursor-pointer">
+              <div class="option-card rounded-3xl p-8 hover:shadow-lg">
+                <label class="flex items-start space-x-5 cursor-pointer">
                   <input type="checkbox" name="output_types" value="K6 (.js)" class="checkbox-custom mt-1">
                   <div class="flex-1">
-                    <div class="flex items-center mb-2">
-                      <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center mb-4">
+                      <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                       </div>
-                      <span class="font-semibold text-gray-800">K6 (.js)</span>
+                      <span class="font-bold text-xl text-slate-100">K6 (.js)</span>
                     </div>
-                    <p class="text-sm text-gray-600">Generate K6 JavaScript scripts for modern performance testing</p>
+                    <p class="text-slate-400 leading-relaxed">Generate K6 JavaScript scripts for modern performance testing with cloud-native capabilities</p>
                   </div>
                 </label>
               </div>
@@ -234,9 +358,9 @@
           </div>
 
           <!-- Submit Button -->
-          <div class="text-center">
-            <button type="submit" class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold py-4 px-12 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all pulse-glow">
-              <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="text-center pt-4">
+            <button type="submit" class="btn-primary text-white font-bold py-5 px-16 rounded-full shadow-2xl transform hover:scale-105 transition-all pulse-glow text-lg">
+              <svg class="w-6 h-6 inline-block mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
               </svg>
               Generate Scripts
@@ -247,33 +371,33 @@
 
       <!-- Generated Files Section -->
       {% if output_paths %}
-      <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
-        <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="card-hover rounded-3xl p-10 mb-12 shadow-2xl">
+        <div class="text-center mb-8">
+          <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
-          <h2 class="text-2xl font-bold text-gray-800 mb-2">🎉 Scripts Generated Successfully!</h2>
-          <p class="text-gray-600">Your enterprise-ready files are available for download</p>
+          <h2 class="text-3xl font-bold text-slate-100 mb-4">🎉 Scripts Generated Successfully!</h2>
+          <p class="text-slate-400 text-lg">Your enterprise-ready files are available for download</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           {% for path in output_paths %}
-          <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-300 transition-all">
+          <div class="option-card rounded-2xl p-6 hover:shadow-lg">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
-                <div class="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center mr-4">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl flex items-center justify-center mr-5 shadow-lg">
+                  <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
                 </div>
                 <div>
-                  <p class="font-semibold text-gray-800">{{ path.split('/')[-1] }}</p>
-                  <p class="text-sm text-gray-500">Ready to download</p>
+                  <p class="font-bold text-slate-100 text-lg">{{ path.split('/')[-1] }}</p>
+                  <p class="text-slate-400">Ready to download</p>
                 </div>
               </div>
-              <a href="{{ url_for('static', path='outputs/' ~ path.split('/')[-1]) }}" download class="bg-cyan-500 text-white font-semibold py-2 px-4 rounded-full hover:bg-cyan-600 transition-all transform hover:scale-105">
+              <a href="{{ url_for('static', path='outputs/' ~ path.split('/')[-1]) }}" download class="btn-primary text-white font-bold py-3 px-6 rounded-full hover:scale-105 transition-all shadow-lg">
                 Download
               </a>
             </div>
@@ -284,8 +408,8 @@
       {% endif %}
 
       <!-- Back to Home Button -->
-      <div class="text-center mt-8">
-        <a href="/home" class="inline-flex items-center text-gray-600 hover:text-blue-600 font-semibold transition-colors">
+      <div class="text-center mt-12">
+        <a href="/home" class="inline-flex items-center text-slate-400 hover:text-cyan-400 font-semibold transition-colors text-lg">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
@@ -296,14 +420,14 @@
     </div>
   </main>
 
-  <!-- ─── Footer ───────────────────────────────────────────────────────── -->
-  <footer class="bg-white border-t">
-    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-gray-600 flex flex-col sm:flex-row justify-between gap-4">
+  <!-- Footer -->
+  <footer class="glass-effect text-slate-300 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 py-8 text-sm flex flex-col sm:flex-row justify-between gap-4">
       <div>© 2025 JMeter Toolkit</div>
-      <div class="space-x-4">
-        <a href="#" class="hover:text-blue-600 transition-colors">Privacy</a>
-        <a href="#" class="hover:text-blue-600 transition-colors">Terms</a>
-        <a href="#" class="hover:text-blue-600 transition-colors">Contact</a>
+      <div class="space-x-6">
+        <a href="#" class="hover:text-cyan-400 transition-colors">Privacy</a>
+        <a href="#" class="hover:text-cyan-400 transition-colors">Terms</a>
+        <a href="#" class="hover:text-cyan-400 transition-colors">Contact</a>
       </div>
     </div>
   </footer>
@@ -346,14 +470,14 @@
     // Update upload display when file is selected
     function updateUploadDisplay(file) {
       uploadContent.innerHTML = `
-        <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
         </div>
-        <p class="text-lg font-semibold text-gray-700 mb-2">✅ ${file.name}</p>
-        <p class="text-gray-500">File ready for processing</p>
-        <p class="text-sm text-gray-400 mt-2">Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+        <p class="text-xl font-bold text-slate-200 mb-3">✅ ${file.name}</p>
+        <p class="text-slate-400 text-lg">File ready for processing</p>
+        <p class="text-sm text-slate-500 mt-4">Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
       `;
     }
   </script>
