@@ -225,6 +225,20 @@
         <a href="/k6-editor" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">K6 Editor</a>
         <a href="http://localhost:8000/execute" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Execute</a>
         <a href="/chat" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">LLM Chat</a>
+        <div class="relative group">
+          <button class="nav-link text-slate-300 hover:text-cyan-400 font-medium inline-flex items-center">
+            Monitoring
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="absolute right-0 mt-2 w-56 rounded-xl glass-effect shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+            <a href="/dashboard" class="block px-4 py-3 text-slate-200 hover:text-cyan-300">Execution Dashboard</a>
+            <a href="/jmeter-dashboard" class="block px-4 py-3 text-slate-200 hover:text-cyan-300">JMeter Dashboard</a>
+            <a href="/monitoring/performance" class="block px-4 py-3 text-slate-200 hover:text-cyan-300">Performance</a>
+            <a href="/monitoring/security" class="block px-4 py-3 text-slate-200 hover:text-cyan-300">Security</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>

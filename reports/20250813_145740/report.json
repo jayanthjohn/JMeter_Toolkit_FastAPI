@@ -1,0 +1,55 @@
+{
+  "summary": {
+    "target": "https://petstore.octoperf.com/actions/Catalog.action",
+    "pages_scanned": 1
+  },
+  "lighthouse": {
+    "available": false,
+    "note": "lighthouse CLI not found"
+  },
+  "js_vulnerabilities": {
+    "available": false,
+    "note": "httpx/bs4 not installed"
+  },
+  "security_headers": {
+    "headers": {
+      "date": "Wed, 13 Aug 2025 13:57:40 GMT",
+      "content-type": "text/html;charset=UTF-8",
+      "content-length": "5352",
+      "connection": "keep-alive",
+      "set-cookie": "JSESSIONID=DC9948DA135496DB6E4CF81B6A7B7FAF; Path=/; HttpOnly",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload"
+    },
+    "findings": [
+      {
+        "type": "missing_header",
+        "header": "content-security-policy",
+        "description": "Missing Content Security Policy"
+      },
+      {
+        "type": "missing_header",
+        "header": "x-frame-options",
+        "description": "Lack of X-Frame-Options"
+      },
+      {
+        "type": "missing_header",
+        "header": "x-xss-protection",
+        "description": "Missing XSS protection header"
+      },
+      {
+        "type": "missing_header",
+        "header": "x-content-type-options",
+        "description": "Missing MIME sniffing protection header"
+      }
+    ],
+    "cookies": [
+      {
+        "name": "JSESSIONID",
+        "secure": false,
+        "httponly": false,
+        "samesite": ""
+      }
+    ]
+  }
+}

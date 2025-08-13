@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from .utils.postman_parser import parse_postman_collection
 from .routers import regex, scriptgen, chat, k6_editor
+from .routers import monitoring as monitoring_router
 # Additional imports for JMeter execution
 from fastapi import BackgroundTasks
 from fastapi.responses import JSONResponse
@@ -23,6 +24,8 @@ from .routers.scriptgen import generate_jmx_from_csv_using_template
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+os.makedirs("reports", exist_ok=True)
+app.mount("/reports", StaticFiles(directory="reports"), name="reports")
 templates = Jinja2Templates(directory="templates")
 import os
 templates.env.filters["basename"] = lambda path: os.path.basename(path)
@@ -32,6 +35,7 @@ app.include_router(regex.router)
 app.include_router(scriptgen.router)
 app.include_router(chat.router)
 app.include_router(k6_editor.router)
+app.include_router(monitoring_router.router)
 
 import json
 
@@ -315,6 +319,11 @@ from fastapi.responses import HTMLResponse
 @app.get("/dashboard", response_class=HTMLResponse)
 async def show_dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
+
+# --- JMeter Streamlit Dashboard Route ---
+@app.get("/jmeter-dashboard", response_class=HTMLResponse)
+async def show_jmeter_dashboard(request: Request):
+    return templates.TemplateResponse("jmeter_dashboard.html", {"request": request})
 
 
 # --- JMeter Log Route ---

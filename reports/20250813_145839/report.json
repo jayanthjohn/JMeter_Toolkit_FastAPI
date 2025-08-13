@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "target": "https://petstore.octoperf.com/actions/Catalog.action",
+    "pages_scanned": 1,
+    "checks": [
+      "security_headers",
+      "js_vulnerabilities",
+      "ssl_scan",
+      "nuclei"
+    ]
+  },
+  "security_headers": {
+    "headers": {
+      "date": "Wed, 13 Aug 2025 13:58:39 GMT",
+      "content-type": "text/html;charset=UTF-8",
+      "content-length": "5352",
+      "connection": "keep-alive",
+      "set-cookie": "JSESSIONID=7F096DBB1D6E04577D8B732D01894A24; Path=/; HttpOnly",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload"
+    },
+    "findings": [
+      {
+        "type": "missing_header",
+        "header": "content-security-policy",
+        "description": "Missing Content Security Policy"
+      },
+      {
+        "type": "missing_header",
+        "header": "x-frame-options",
+        "description": "Lack of X-Frame-Options"
+      },
+      {
+        "type": "missing_header",
+        "header": "x-xss-protection",
+        "description": "Missing XSS protection header"
+      },
+      {
+        "type": "missing_header",
+        "header": "x-content-type-options",
+        "description": "Missing MIME sniffing protection header"
+      }
+    ],
+    "cookies": [
+      {
+        "name": "JSESSIONID",
+        "secure": false,
+        "httponly": false,
+        "samesite": ""
+      }
+    ]
+  },
+  "js_vulnerabilities": {
+    "available": false,
+    "note": "httpx/bs4 not installed"
+  },
+  "ssl_scan": {
+    "available": false,
+    "note": "sslscan not installed"
+  },
+  "nuclei": {
+    "available": false,
+    "note": "nuclei not installed"
+  }
+}
