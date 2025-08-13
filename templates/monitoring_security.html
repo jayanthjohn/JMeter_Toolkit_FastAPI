@@ -8,7 +8,7 @@
 	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen flex flex-col">
-	<header class="sticky top-0 z-50 bg-white border-b border-black">
+	<header class="glass-effect sticky top-0 z-50">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 			<div class="flex items-center gap-2">
 				<img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
@@ -16,6 +16,7 @@
 			</div>
 		</div>
 	</header>
+	{% include '_main_sections_nav.html' %}
 	<main class="flex-1 relative z-10">
 		<section class="py-8">
 			<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-black">
