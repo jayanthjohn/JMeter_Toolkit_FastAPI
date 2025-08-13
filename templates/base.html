@@ -58,18 +58,18 @@
     }
 
     .card-hover {
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       background: rgba(51, 65, 85, 0.8);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(6, 182, 212, 0.2);
     }
 
     .card-hover:hover {
-      transform: translateY(-12px) scale(1.03);
+      transform: translateY(-4px) scale(1.02);
       box-shadow: 
-        0 25px 50px rgba(6, 182, 212, 0.2),
-        0 0 0 1px rgba(6, 182, 212, 0.3);
-      background: rgba(51, 65, 85, 0.95);
+        0 10px 25px rgba(6, 182, 212, 0.15),
+        0 0 0 1px rgba(6, 182, 212, 0.25);
+      background: rgba(51, 65, 85, 0.9);
     }
 
     .floating-animation {
@@ -192,6 +192,36 @@
       90% { opacity: 1; }
       100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
     }
+
+    /* Responsive Hero Section */
+    @media (max-width: 640px) {
+      .hero-gradient {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-gradient {
+        padding-top: 2.5rem !important;
+        padding-bottom: 2.5rem !important;
+      }
+    }
+
+    /* Auto-adjust based on viewport height */
+    @media (max-height: 700px) {
+      .hero-gradient {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+      }
+    }
+
+    @media (max-height: 600px) {
+      .hero-gradient {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -222,6 +252,7 @@
         <a href="/har-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">HAR → JMX</a>
         <a href="/postman-to-jmx" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Postman → JMX</a>
         <a href="/regex-generator" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Regex Generator</a>
+        <a href="/jmx-editor" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">JMX Editor</a>
         <a href="/k6-editor" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">K6 Editor</a>
         <a href="http://localhost:8000/execute" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Execute</a>
         <a href="/chat" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">LLM Chat</a>
@@ -232,41 +263,41 @@
   <!-- Page Content -->
   <main class="flex-1 relative z-10">
     <!-- Hero Section -->
-    <section class="hero-gradient relative overflow-hidden py-24 lg:py-40">
-      <div class="absolute inset-0 geometric-bg opacity-40"></div>
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="hero-gradient relative overflow-hidden py-12 sm:py-16 lg:py-20">
+      <div class="absolute inset-0 geometric-bg opacity-30"></div>
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h1 class="text-5xl lg:text-7xl font-bold text-slate-100 mb-8 leading-tight">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-100 mb-4 sm:mb-6 leading-tight">
             Supercharge Your
             <span class="text-gradient block">Performance Testing</span>
           </h1>
-          <p class="text-xl lg:text-2xl text-slate-300 mb-10 max-w-4xl mx-auto leading-relaxed">
+          <p class="text-base sm:text-lg lg:text-xl text-slate-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
             Transform, generate, and optimize your JMeter test plans with our comprehensive toolkit.
-            Built for modern performance engineers who demand excellence.
+            Built for modern performance engineers.
           </p>
-          <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <button class="btn-primary text-white px-10 py-5 rounded-full font-bold text-lg pulse-glow">
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button class="btn-primary text-white px-8 py-3 sm:px-10 sm:py-4 rounded-full font-semibold text-base sm:text-lg pulse-glow">
               Get Started Today
             </button>
-            <button class="btn-secondary text-slate-200 px-10 py-5 rounded-full font-bold text-lg">
+            <button class="btn-secondary text-slate-200 px-8 py-3 sm:px-10 sm:py-4 rounded-full font-semibold text-base sm:text-lg">
               Watch Demo
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Enhanced Floating Elements -->
-      <div class="absolute top-24 left-12 floating-animation">
-        <div class="w-20 h-20 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full opacity-20 blur-sm"></div>
+      <!-- Simplified Floating Elements -->
+      <div class="absolute top-16 left-8 floating-animation hidden sm:block">
+        <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full opacity-15 blur-sm"></div>
       </div>
-      <div class="absolute bottom-24 right-12 floating-animation" style="animation-delay: -3s;">
-        <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-orange-500 rounded-full opacity-20 blur-sm"></div>
+      <div class="absolute bottom-16 right-8 floating-animation hidden sm:block" style="animation-delay: -3s;">
+        <div class="w-10 h-10 bg-gradient-to-br from-pink-400 to-orange-500 rounded-full opacity-15 blur-sm"></div>
       </div>
-      <div class="absolute top-1/2 left-8 floating-animation" style="animation-delay: -6s;">
-        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-15 blur-sm"></div>
+      <div class="absolute top-1/2 left-4 floating-animation hidden lg:block" style="animation-delay: -6s;">
+        <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-10 blur-sm"></div>
       </div>
-      <div class="absolute top-1/3 right-20 floating-animation" style="animation-delay: -4s;">
-        <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-red-500 rounded-full opacity-15 blur-sm"></div>
+      <div class="absolute top-1/3 right-12 floating-animation hidden lg:block" style="animation-delay: -4s;">
+        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-red-500 rounded-full opacity-10 blur-sm"></div>
       </div>
     </section>
 
@@ -283,62 +314,71 @@
         </div>
 
         <!-- Converting Tools Section -->
-        <div class="mb-20">
-          <div class="text-center mb-12">
-            <h3 class="text-3xl font-bold text-slate-200 mb-4">
-              <span class="text-gradient">Converting Tools</span>
+        <div class="mb-16">
+          <div class="text-center mb-10">
+            <h3 class="text-2xl font-bold text-slate-200 mb-3">
+              <span class="text-gradient">🔄 Converting Tools</span>
             </h3>
-            <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+            <p class="text-base text-slate-400 max-w-xl mx-auto">
               Transform your existing test artifacts into JMeter test plans
             </p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- CSV to JMX -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">📊</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">CSV to JMX</h4>
+                  <p class="text-xs text-slate-400">Data-driven testing</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">CSV to JMX</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Convert your CSV data into JMeter test plans effortlessly. Perfect for data-driven testing scenarios with advanced configuration options.</p>
-              <a href="/csv-to-jmx" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Convert CSV data into JMeter test plans for data-driven testing scenarios.</p>
+              <a href="/csv-to-jmx" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                 Try it now
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
             </div>
 
             <!-- HAR to JMX -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9-9a9 9 0 00-9 9m9-9v18"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">🌐</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">HAR to JMX</h4>
+                  <p class="text-xs text-slate-400">Browser recordings</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">HAR to JMX</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Transform browser HAR files into comprehensive JMeter test plans with all HTTP requests, headers, and parameters preserved.</p>
-              <a href="/har-to-jmx" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Transform browser HAR files into comprehensive JMeter test plans.</p>
+              <a href="/har-to-jmx" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                 Convert now
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
             </div>
 
             <!-- Postman to JMX -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">🚀</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">Postman to JMX</h4>
+                  <p class="text-xs text-slate-400">API collections</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">Postman to JMX</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Seamlessly migrate your Postman collections to JMeter test plans without losing any configuration, variables, or test logic.</p>
-              <a href="/postman-to-jmx" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Migrate your Postman collections to JMeter test plans seamlessly.</p>
+              <a href="/postman-to-jmx" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                 Migrate now
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
@@ -346,80 +386,92 @@
           </div>
         </div>
 
-        <!-- Tools Section -->
-        <div class="mb-20">
-          <div class="text-center mb-12">
-            <h3 class="text-3xl font-bold text-slate-200 mb-4">
-              <span class="text-gradient">Development Tools</span>
+        <!-- Development Tools Section -->
+        <div class="mb-16">
+          <div class="text-center mb-10">
+            <h3 class="text-2xl font-bold text-slate-200 mb-3">
+              <span class="text-gradient">🛠️ Development Tools</span>
             </h3>
-            <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+            <p class="text-base text-slate-400 max-w-xl mx-auto">
               Powerful utilities to enhance your testing workflow
             </p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Regex Generator -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">🔍</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">Regex Generator</h4>
+                  <p class="text-xs text-slate-400">Pattern matching</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">Regex Generator</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Generate powerful regular expressions for data extraction and correlation in your performance tests with AI-powered suggestions.</p>
-              <a href="/regex-generator" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Generate powerful regex patterns for data extraction and correlation.</p>
+              <a href="/regex-generator" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                 Generate regex
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
             </div>
 
-            <!-- JSON Formatter -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
+            <!-- JMX Visual Editor -->
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">🎨</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">Visual JMX Editor</h4>
+                  <p class="text-xs text-slate-400">Drag & drop</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">JSON Formatter</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Format, validate, and beautify your JSON data for better readability and debugging in your API tests.</p>
-              <a href="#" class="inline-flex items-center text-slate-500 font-semibold">
-                Coming soon
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Build JMeter test plans visually with drag-and-drop components.</p>
+              <a href="/jmx-editor" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
+                Open editor
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
             </div>
 
             <!-- K6 Editor -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">⚡</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">K6 Script Editor</h4>
+                  <p class="text-xs text-slate-400">Modern testing</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">K6 Script Editor</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Edit, validate, and test your K6 performance scripts with syntax highlighting and real-time response validation.</p>
-              <a href="/k6-editor" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Edit and validate K6 performance scripts with syntax highlighting.</p>
+              <a href="/k6-editor" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                 Open editor
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
             </div>
 
             <!-- LLM Chat -->
-            <div class="card-hover rounded-3xl p-8 shadow-2xl">
-              <div class="feature-icon w-18 h-18 mb-8">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">🤖</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">LLM Chat</h4>
+                  <p class="text-xs text-slate-400">AI assistance</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4">LLM Chat</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed">Get intelligent assistance for your performance testing challenges with our AI-powered chat assistant and expert guidance.</p>
-              <a href="/chat" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Get intelligent assistance for your performance testing challenges.</p>
+              <a href="/chat" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                 Start chatting
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
@@ -427,29 +479,32 @@
           </div>
         </div>
 
-        <!-- Executer Section -->
-        <div class="mb-20">
-          <div class="text-center mb-12">
-            <h3 class="text-3xl font-bold text-slate-200 mb-4">
-              <span class="text-gradient">Test Execution</span>
+        <!-- Test Execution Section -->
+        <div class="mb-16">
+          <div class="text-center mb-10">
+            <h3 class="text-2xl font-bold text-slate-200 mb-3">
+              <span class="text-gradient">🚀 Test Execution</span>
             </h3>
-            <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+            <p class="text-base text-slate-400 max-w-xl mx-auto">
               Execute and monitor your performance tests directly
             </p>
           </div>
           <div class="flex justify-center">
-            <div class="card-hover rounded-3xl p-8 shadow-2xl max-w-md">
-              <div class="feature-icon w-18 h-18 mb-8 mx-auto">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M6 6l3 3m0 0l3-3m-3 3V2m0 16a9 9 0 100-18 9 9 0 000 18z"></path>
-                </svg>
+            <div class="card-hover rounded-2xl p-6 shadow-xl max-w-sm">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                  <span class="text-2xl">🎯</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-slate-100">Execute JMeter</h4>
+                  <p class="text-xs text-slate-400">Real-time monitoring</p>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-100 mb-4 text-center">Execute JMeter</h4>
-              <p class="text-slate-400 mb-8 leading-relaxed text-center">Run your JMeter test plans directly from the web interface with real-time monitoring and comprehensive reporting.</p>
+              <p class="text-slate-400 mb-4 text-sm leading-relaxed">Run JMeter test plans with real-time monitoring and comprehensive reporting.</p>
               <div class="text-center">
-                <a href="http://localhost:8000/execute" class="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+                <a href="http://localhost:8000/execute" class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors text-sm">
                   Execute tests
-                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                 </a>

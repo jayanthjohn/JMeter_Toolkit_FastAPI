@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from .utils.postman_parser import parse_postman_collection
-from .routers import regex, scriptgen, chat, k6_editor
+from .routers import regex, scriptgen, chat, k6_editor, jmx_editor
 # Additional imports for JMeter execution
 from fastapi import BackgroundTasks
 from fastapi.responses import JSONResponse
@@ -32,6 +32,7 @@ app.include_router(regex.router)
 app.include_router(scriptgen.router)
 app.include_router(chat.router)
 app.include_router(k6_editor.router)
+app.include_router(jmx_editor.router)
 
 import json
 
