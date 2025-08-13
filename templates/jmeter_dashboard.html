@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>JMeter Dashboard</title>
+	<link rel="stylesheet" href="/static/style.css">
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+	<header class="glass-effect sticky top-0 z-50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+			<div class="flex items-center gap-2">
+				<img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
+				<span class="font-bold text-xl text-slate-100">JMeter Dashboard</span>
+			</div>
+			<nav class="hidden md:flex space-x-8">
+				<a href="/home" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Home</a>
+				<a href="/dashboard" class="nav-link text-slate-300 hover:text-cyan-400 font-medium">Execution Dashboard</a>
+			</nav>
+		</div>
+	</header>
+	<main class="flex-1 relative z-10">
+		<section class="py-6">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
+					<iframe src="http://localhost:8501" class="w-full" style="height: calc(100vh - 120px); border: none; background: #0b1220;"></iframe>
+				</div>
+				<p class="text-slate-400 mt-4">Run the Streamlit app with <code>streamlit run app/streamlit_dashboard.py</code>. If hosted elsewhere, update the iframe URL accordingly.</p>
+			</div>
+		</section>
+	</main>
+</body>
+</html> 

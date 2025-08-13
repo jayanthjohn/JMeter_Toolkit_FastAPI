@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Monitoring - Security</title>
+	<link rel="stylesheet" href="/static/style.css">
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+	<header class="glass-effect sticky top-0 z-50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+			<div class="flex items-center gap-2">
+				<img src="/static/img/Logo2.png" alt="logo" class="h-12 w-auto" />
+				<span class="font-bold text-xl text-black">Security Monitoring</span>
+			</div>
+		</div>
+	</header>
+	{% include '_main_sections_nav.html' %}
+	<main class="flex-1 relative z-10">
+		<section class="py-8">
+			<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-black">
+				<div class="rounded-2xl p-6 bg-white border border-black">
+					<form method="POST" action="/monitoring/security/run" class="space-y-6">
+						<label class="block">
+							<span class="font-medium">Target URL</span>
+							<input name="url" type="url" placeholder="https://example.com" required class="mt-1 w-full px-4 py-3 rounded-xl bg-white text-black border border-black focus:outline-none focus:ring-2 focus:ring-black" />
+						</label>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<label class="inline-flex items-center gap-2 text-black"><input type="checkbox" name="headers" checked /> Security Headers</label>
+							<label class="inline-flex items-center gap-2 text-black"><input type="checkbox" name="jsvuln" checked /> JS Library Vulns</label>
+							<label class="inline-flex items-center gap-2 text-black"><input type="checkbox" name="ssl" /> SSL Scan (sslscan)</label>
+							<label class="inline-flex items-center gap-2 text-black"><input type="checkbox" name="nuclei" /> Nuclei Scan</label>
+						</div>
+						<div class="rounded-xl border border-black p-4 bg-white">
+							<h4 class="font-semibold mb-2">Login (OWASP audit)</h4>
+							<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+								<input name="login_url" type="url" placeholder="https://example.com/login" class="px-4 py-3 rounded-xl bg-white text-black border border-black" />
+								<input name="username_field" placeholder="username field name (e.g., username)" class="px-4 py-3 rounded-xl bg-white text-black border border-black" />
+								<input name="password_field" placeholder="password field name (e.g., password)" class="px-4 py-3 rounded-xl bg-white text-black border border-black" />
+							</div>
+							<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
+								<input name="username" placeholder="username" class="px-4 py-3 rounded-xl bg-white text-black border border-black" />
+								<input name="password" type="password" placeholder="password" class="px-4 py-3 rounded-xl bg-white text-black border border-black" />
+								<input name="protected_url" type="url" placeholder="https://example.com/account" class="px-4 py-3 rounded-xl bg-white text-black border border-black" />
+							</div>
+							<p class="text-sm mt-2">Optional: provide login info to test OWASP Top 10 aspects including headers, CSRF, session cookies, brute force rate-limit, and access control.</p>
+						</div>
+						<button type="submit" class="px-6 py-3 rounded-xl bg-black text-white font-semibold">Run Security Audit</button>
+					</form>
+				</div>
+				<div class="mt-6">
+					<h3 class="font-semibold mb-2">Latest Report</h3>
+					{% if report_link %}
+						<a href="{{ report_link }}" target="_blank" class="inline-block mb-3 bg-black text-white font-semibold px-3 py-2 rounded">Open full HTML report</a>
+					{% endif %}
+					<pre class="p-4 rounded-xl overflow-auto" style="max-height: 480px; background: #ffffff; color: #000000; border: 1px solid #000000;">{{ report_preview or 'No report yet.' }}</pre>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+</html> 
