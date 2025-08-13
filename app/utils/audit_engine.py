@@ -37,7 +37,7 @@ class AuditConfig:
 	password: Optional[str] = None
 	protected_url: Optional[str] = None
 	# Crawl depth and limits
-	max_pages: int = 50
+	max_pages: int = 200
 	same_origin_only: bool = True
 
 
@@ -69,8 +69,10 @@ class ReportWriter:
 
 		items = []
 		items.append(section("Summary", f"<pre>{json.dumps(data.get('summary', {}), indent=2)}</pre>"))
+		if data.get("crawl"):
+			items.append(section("Crawl", f"<pre>{json.dumps(data.get('crawl', {}), indent=2)}</pre>"))
 		for key, value in data.items():
-			if key == "summary":
+			if key in {"summary", "crawl"}:
 				continue
 			items.append(section(key.title(), f"<pre>{json.dumps(value, indent=2)}</pre>"))
 		return """
@@ -88,7 +90,7 @@ class ReportWriter:
 
 # --- Crawler ---
 class WebCrawler:
-	def __init__(self, base_url: str, same_origin_only: bool = True, max_pages: int = 50) -> None:
+	def __init__(self, base_url: str, same_origin_only: bool = True, max_pages: int = 200) -> None:
 		self.base_url = base_url.rstrip("/")
 		self.same_origin_only = same_origin_only
 		self.max_pages = max_pages
@@ -99,12 +101,36 @@ class WebCrawler:
 		u = urlparse(url)
 		return (b.scheme, b.netloc) == (u.scheme, u.netloc)
 
+	def _extract_links_bs(self, html: str, current_url: str) -> List[str]:
+		from urllib.parse import urljoin
+		links: List[str] = []
+		soup = BeautifulSoup(html, "html.parser")  # type: ignore
+		for a in soup.find_all("a", href=True):
+			href = a["href"].strip()
+			if not href or href.startswith("#") or href.lower().startswith("javascript:") or href.lower().startswith("mailto:"):
+				continue
+			abs_url = urljoin(current_url, href)
+			links.append(abs_url)
+		return links
+
+	def _extract_links_regex(self, html: str, current_url: str) -> List[str]:
+		from urllib.parse import urljoin
+		links: List[str] = []
+		for m in re.finditer(r'href\s*=\s*(["\"])\s*([^"\'>\s#]+)\s*\1', html, flags=re.I):
+			href = m.group(2)
+			if not href or href.lower().startswith("javascript:") or href.lower().startswith("mailto:"):
+				continue
+			abs_url = urljoin(current_url, href)
+			links.append(abs_url)
+		return links
+
 	async def crawl(self) -> List[str]:
-		if httpx is None or BeautifulSoup is None:
+		if httpx is None:
 			return [self.base_url]
 		visited: Set[str] = set()
 		queue: List[str] = [self.base_url]
-		async with httpx.AsyncClient(follow_redirects=True, timeout=15) as client:
+		headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
+		async with httpx.AsyncClient(follow_redirects=True, timeout=20, headers=headers) as client:  # type: ignore
 			while queue and len(visited) < self.max_pages:
 				url = queue.pop(0)
 				if url in visited:
@@ -112,11 +138,16 @@ class WebCrawler:
 				try:
 					resp = await client.get(url)
 					visited.add(url)
-					soup = BeautifulSoup(resp.text, "html.parser")  # type: ignore
-					for a in soup.find_all("a", href=True):
-						href = a["href"].strip()
-						from urllib.parse import urljoin
-						abs_url = urljoin(url, href)
+					html = resp.text
+					links = []
+					try:
+						if BeautifulSoup is not None:
+							links = self._extract_links_bs(html, url)
+						else:
+							links = self._extract_links_regex(html, url)
+					except Exception:
+						links = self._extract_links_regex(html, url)
+					for abs_url in links:
 						if self.same_origin_only and not self._same_origin(abs_url):
 							continue
 						if abs_url not in visited and abs_url not in queue:
@@ -144,7 +175,7 @@ class LighthouseScanner(Scanner):
 		if shutil.which("lighthouse") is None:
 			result["note"] = "lighthouse CLI not found"
 			return result
-		# Run lighthouse with JSON output
+		# Run lighthouse with JSON output (first page only; heavy scan)
 		tmp_json = "lighthouse_report.json"
 		cmd = [
 			"lighthouse", target,
@@ -165,6 +196,7 @@ class LighthouseScanner(Scanner):
 			metrics = existing.get("audits", {})
 			return {
 				"available": True,
+				"scanned_url": target,
 				"scores": {
 					"performance": cats.get("performance", {}).get("score"),
 					"accessibility": cats.get("accessibility", {}).get("score"),
@@ -189,28 +221,33 @@ class SecurityHeadersScanner(Scanner):
 	async def run(self, urls: List[str]) -> Dict:
 		if httpx is None:
 			return {"available": False, "note": "httpx not installed"}
-		target = urls[0]
+		results: Dict[str, Dict] = {}
 		async with httpx.AsyncClient(follow_redirects=True, timeout=15) as client:  # type: ignore
-			resp = await client.get(target)
-			headers = {k.lower(): v for k, v in resp.headers.items()}
-			findings = []
-			def missing(h: str, desc: str):
-				if h not in headers:
-					findings.append({"type": "missing_header", "header": h, "description": desc})
-			missing("content-security-policy", "Missing Content Security Policy")
-			missing("x-frame-options", "Lack of X-Frame-Options")
-			missing("strict-transport-security", "No HSTS (Strict-Transport-Security)")
-			missing("x-xss-protection", "Missing XSS protection header")
-			missing("x-content-type-options", "Missing MIME sniffing protection header")
-			cookie_flags: List[Dict] = []
-			for cookie in resp.cookies.jar:
-				cookie_flags.append({
-					"name": cookie.name,
-					"secure": cookie._rest.get("secure") is not None or getattr(cookie, "secure", False),
-					"httponly": cookie._rest.get("httponly") is not None or cookie.has_nonstandard_attr("httponly"),
-					"samesite": cookie._rest.get("samesite") or "",
-				})
-			return {"headers": headers, "findings": findings, "cookies": cookie_flags}
+			for target in urls:
+				try:
+					resp = await client.get(target)
+					headers = {k.lower(): v for k, v in resp.headers.items()}
+					findings = []
+					def missing(h: str, desc: str):
+						if h not in headers:
+							findings.append({"type": "missing_header", "header": h, "description": desc})
+					missing("content-security-policy", "Missing Content Security Policy")
+					missing("x-frame-options", "Lack of X-Frame-Options")
+					missing("strict-transport-security", "No HSTS (Strict-Transport-Security)")
+					missing("x-xss-protection", "Missing XSS protection header")
+					missing("x-content-type-options", "Missing MIME sniffing protection header")
+					cookie_flags: List[Dict] = []
+					for cookie in resp.cookies.jar:
+						cookie_flags.append({
+							"name": cookie.name,
+							"secure": cookie._rest.get("secure") is not None or getattr(cookie, "secure", False),
+							"httponly": cookie._rest.get("httponly") is not None or cookie.has_nonstandard_attr("httponly"),
+							"samesite": cookie._rest.get("samesite") or "",
+						})
+					results[target] = {"headers": headers, "findings": findings, "cookies": cookie_flags, "status": resp.status_code}
+				except Exception as exc:
+					results[target] = {"error": str(exc)}
+		return {"results": results}
 
 
 class JsVulnerabilityScanner(Scanner):
@@ -235,7 +272,7 @@ class JsVulnerabilityScanner(Scanner):
 			return {"available": False, "note": "httpx/bs4 not installed"}
 		async with httpx.AsyncClient(follow_redirects=True, timeout=15) as client:  # type: ignore
 			results: Dict[str, List[Dict]] = {}
-			for url in urls[:30]:
+			for url in urls:
 				try:
 					resp = await client.get(url)
 					soup = BeautifulSoup(resp.text, "html.parser")  # type: ignore
@@ -253,7 +290,7 @@ class JsVulnerabilityScanner(Scanner):
 							results[url] = libs
 				except Exception:
 					continue
-			return results
+			return {"results": results}
 
 
 class SslScanner(Scanner):
@@ -269,7 +306,7 @@ class SslScanner(Scanner):
 		try:
 			proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
 			stdout, _ = await proc.communicate()
-			return {"available": True, "output": stdout.decode("utf-8", errors="ignore")}
+			return {"available": True, "output": stdout.decode("utf-8", errors="ignore"), "host": host}
 		except Exception as exc:
 			return {"available": True, "error": str(exc)}
 
@@ -388,7 +425,7 @@ class AuditEngine:
 			tasks.append(("lighthouse", asyncio.create_task(LighthouseScanner().run(urls))))
 		if self.config.scan_js_vulns:
 			tasks.append(("js_vulnerabilities", asyncio.create_task(JsVulnerabilityScanner().run(urls))))
-		# Always include headers for best-practices
+		# Always include headers for best-practices (per URL)
 		tasks.append(("security_headers", asyncio.create_task(SecurityHeadersScanner().run(urls))))
 		results: Dict[str, Dict] = {}
 		for name, task in tasks:
@@ -398,7 +435,7 @@ class AuditEngine:
 			"pages_scanned": len(urls),
 			"report_type": "performance",
 		}
-		data = {"summary": summary, **results}
+		data = {"summary": summary, "crawl": {"urls": urls}, **results}
 		_, html_path = self.writer.write(data, report_title="Performance Audit Report")
 		return html_path, json.dumps(summary, indent=2)
 
@@ -431,6 +468,6 @@ class AuditEngine:
 			"checks": list(results.keys()) + (["auth_flow"] if auth_findings else []),
 			"report_type": "security",
 		}
-		data = {"summary": summary, **results}
+		data = {"summary": summary, "crawl": {"urls": urls}, **results}
 		_, html_path = self.writer.write(data, report_title="Security Audit Report")
 		return html_path, json.dumps(summary, indent=2) 
